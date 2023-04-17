@@ -1,0 +1,141 @@
+.InterviewBot-Container {
+    display: flex;
+}
+
+.Score {
+    height: 100vh;
+    border: 1px solid lightgrey;
+}
+
+.Primary-Section {
+    height: 100vh;
+    padding: 50px;
+    overflow: auto;
+}
+
+.InterviewBotDiv {
+    min-height: 4rem;
+    display: flex;
+    margin: 15px 10px;
+}
+
+.InterviewBotIcon {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #10a2a4;
+    color: #10a2a4;
+    border-radius: 50%;
+    background-color: white;
+    font-size: 33px;
+    margin: 8px 10px 8px 0px;
+    position: relative;
+}
+
+.InterviewBotIcon i {
+    margin: 0px 6px;
+}
+
+.InterviewBotProfile {
+    width: 60px;
+    height: 60px;
+    display: flex;
+}
+
+.InterviewBotChat {
+    padding: 15px 20px;
+    border-radius: 10px;
+    background-color: #10a2a4;
+    color: white;
+}
+
+.IntervieweeDiv {
+    min-height: 4rem;
+    display: flex;
+    padding: 0 30px 0 0;
+}
+
+.IntervieweeIcon {
+    width: 50px;
+    height: 50px;
+    border: 2px solid #10a2a4;
+    color: #10a2a4;
+    border-radius: 50%;
+    background-color: white;
+    font-size: 33px;
+    margin: 8px 0px 8px 10px;
+    position: relative;
+}
+
+.IntervieweeIcon i {
+    margin: 0px 6px;
+}
+
+.IntervieweeProfile {
+    width: 60px;
+    height: 60px;
+    display: flex;
+}
+
+.IntervieweeChat {
+    border: 3px solid #10a2a4;
+    padding: 15px 20px;
+    border-radius: 10px;
+    background-color: white;
+    color: #10a2a4;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #10a2a4;
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #037377;
+}
+
+.InputFieldDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 4rem;
+    margin: 20px 0 0px 20px;
+    position: fixed;
+}
+
+#InputField {
+    height: 83%;
+    border-radius: 30px;
+    padding: 0px 17px;
+    border: 1px solid lightgray;
+    outline: none;
+}
+
+.textSend {
+    border-radius: 50%;
+    width: 50px;
+    padding: 6px 0px;
+    height: 50px;
+    border: 1px solid white;
+    font-size: 25px;
+    background-color: #10a2a4;
+    color: white;
+}
+
+.voiceSend {
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    border: 1px solid white;
+    font-size: 25px;
+    background-color: #10a2a4;
+    color: white;
+}
