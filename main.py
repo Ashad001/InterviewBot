@@ -5,6 +5,7 @@ import re
 
 try:
     openai.api_key = os.environ["OPENAI_API_KEY"]
+    
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
     
