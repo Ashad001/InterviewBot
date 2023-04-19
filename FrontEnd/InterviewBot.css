@@ -128,7 +128,7 @@
     font-size: 25px;
     background-color: #10a2a4;
     color: white;
-    cursor: default;
+    /* cursor: none; */
 }
 
 .voiceSend {
@@ -139,5 +139,5 @@
     font-size: 25px;
     background-color: #10a2a4;
     color: white;
-    cursor: default;
+    /* cursor: none; */
 }

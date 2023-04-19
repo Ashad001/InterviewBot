@@ -1,10 +1,68 @@
+window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new window.SpeechRecognition();
+recognition.interimResults = false;
+let listening = false;
+
 let text = document.getElementById('InputField');
 let send_arrow = document.getElementById('textArrow');
 let text_area =  document.getElementById('textArea');
+let input;
 
 send_arrow.style.opacity = 0.5;
 send_arrow.onclick = 'null';
 send_arrow.style.cursor = 'default';
+
+recognition.addEventListener("result", (e) => {
+    const voice_input = Array.from(e.results)
+      .map((result) => result[0])
+      .map((result) => result.transcript)
+      .join("");
+    if (e.results[0].isFinal) 
+    {
+        if(text.value!="")
+        {
+            text.value += " ";
+            text.value += voice_input;
+        }
+        else
+        {
+            text.value += voice_input;
+        }
+        active(text);
+    } 
+    else 
+    {
+        if(text.value!="")
+        {
+            text.value += " ";
+            text.value += voice_input;
+        }
+        else
+        {
+            text.value += voice_input;
+        }
+        active(text);
+    }
+});
+
+recognition.addEventListener("end", () => {
+    console.log("DevBot stopped listening.");
+    listening = false;
+  });
+  
+  document.getElementById("voiceArrow").addEventListener("click", () => {
+    if (!listening) 
+    {
+        console.log("DevBot is listening.");
+        // text.value += voice_input;
+        recognition.start();
+        listening = true;
+    } 
+    else 
+    {
+        console.log("DevBot is already listening.");
+    }
+  });
 
 function check(event) 
 {
@@ -36,6 +94,8 @@ function send()
     if(text.value.length>0)
     {
         createEl('user');
+        text.value = "";
+        active(text);
         text_area.scrollTop = text_area.scrollHeight;
 
         fetch("/receive-data", {
@@ -51,7 +111,6 @@ function send()
             text_area.scrollTop = text_area.scrollHeight;   
         })
         .catch(error => console.error(error));
-        // document.getElementById('InputField').value = " "
     }    
 }
 
