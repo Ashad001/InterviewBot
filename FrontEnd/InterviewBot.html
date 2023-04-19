@@ -27,7 +27,7 @@
 
         <div class="col-12 Primary-Section col-lg-9 container">
             <div class="col-12 container" style="height: 80vh; overflow: auto;" id="textArea">
-                <!-- <div class="InterviewBotDiv col-10">
+                <div class="InterviewBotDiv col-10">
                     <div class="InterviewBotIcon">
                         <i class="bi bi-robot"></i>
                     </div>
@@ -42,13 +42,20 @@
                     <div class="IntervieweeIcon">
                         <i class="bi bi-person"></i>
                     </div>
-                </div> -->
+                </div>
+                <div class="IntervieweeDiv offset-2 col-10">
+                    <div class="IntervieweeChat col-11">
+                        <p class="fs-6">Arigatou Gozaimasu</p>
+                    </div>
+                    <div class="IntervieweeIcon">
+                        <i class="bi bi-person"></i>
+                    </div>
+                </div>
             </div>
             <div class="InputFieldDiv col-8 container">
                 <input type="text" class="col-8 col-md-9" id="InputField" placeholder="Type here or use voice control" onkeypress="check(event)" onkeyup="active(this)">
-                <button class="voiceSend"><i class="bi bi-mic"></i></button>
+                <button class="voiceSend"><i class="bi bi-mic" id="voiceArrow"></i></button>
                 <button class="textSend"><i class="bi bi-send" onclick="send()" id="textArrow"></i></button>
-                
             </div>
         </div>
 
