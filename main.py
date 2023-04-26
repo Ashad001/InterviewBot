@@ -5,15 +5,48 @@ import re
 from flask import Flask, request, render_template
 
 try:
-    #openai.api_key = os.environ["OPENAI_API_KEY"]
-    openai.api_key = None
-    openai.organization = "org-xRa0c7tnwf5bRNW4GIS4IWH8"
+    # openai.api_key = os.environ["OPENAI_API_KEY"]
+    openai.api_key = "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"
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
-    
+
+def safe_division(numerator, denominator):
+    try:
+        return numerator / denominator
+    except ZeroDivisionError:
+        return numerator    
+
+def report_maker(questions, format_style, answers, model = "gpt-3.5-turbo", max_tokens = 250):
+    messages = [
+        {"role": "system", "content": f"In a recent interivew with following questions {questions}\n and candidate has responded with following answers to each of the questions {answers}\n\n Make a report of the interview and areas where the candidate can improve that can be sent to candidate for future use!\n No need to write each question and answer, just write the report and areas where the candidate can improve!"},
+        {"role": "user", "content": format_style}
+    ]
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=0,
+        max_tokens=max_tokens,
+    )
+    return response.choices[0].message['content']
+
+def score_maker(question, answer, model = "gpt-3.5-turbo", max_tokens = 1):
+    # parse format_style to comma separated string
+    messages = [
+        {"role": "system", "content": f"Rate the message given out of 10 (Be more lenient), based on its correctness, tone and overall behaviour comparing with the question asked! Only write the score where you can (no need to explain the score) otherwise score 0'."},
+        {"role": "user", "content": f"Question: {question}, Anwer: {answer}, Score: "}
+    ]
+
+    response = openai.ChatCompletion.create(
+        model=model,
+        messages=messages,
+        temperature=0,
+        max_tokens=max_tokens,
+    )
+    return response.choices[0].message['content']
 
 class Interview:
     def __init__(self, name):
+        self.name = name
         self.messages = [
             {
             "role": "system",
@@ -23,35 +56,42 @@ class Interview:
                         Assess the candidate's ability to analyze problems and provide effective solutions. Can they think critically and creatively to solve complex problems?  \
                         You can also ask the candidate about various programming questions such as code completion and bug fixes. \
                         Assess whether the candidate's values, personality, and work style align with the company culture and team dynamics \
-                        User will answer the your series of questions and you have to verify whether it is correct or not, its overall behaviour and tone throughout the interview. "
+                        User will answer your questions one by one and you have to verify whether it is correct or not, its overall behaviour and tone throughout the interview should also be noted. "
             },
         ]
+        
         self.score_message = [ 
             {
                 "role": "assistant",
                 "content": "Rate the message given out of 10, based on its correctness, tone and overall behaviour comparing with the question asked! Only write the score where you can (no need to explain the score) otherwise score 0'.",   
             }
         ]
-        self.name = name
+        
         self.score_pattern = re.compile(r'\d+')
         self.scoreByAnswer = 0
         self.scoreByTone = 0
         self.scoreByBot = 0
         self.x_value = 0
         self.questionsAsked = 0
+        
+        self.scoreCount_0 = 0
+        self.scoreCount_1 = 0
+        self.scoreCount_2 = 0
         self.stop_patterns = [
             r".*(stop|end|pause|break|reschedule|leave|close|not interested|not ready).*interview.*",
         ]
+        self.questions = []
+        self.answers = []
         
         self.patterns = [
             r'(if|do) you have any (questions|concerns)',
             r'Let me know if you change your mind\b',
             r'(?:Is there anything else you would like to add|Do you have any questions for us?)\??',
             r'Good luck with your job search(?!.*Good luck with your job search)', 
-            r'thank you for your time',
             r"we'll keep you updated on any developments",
-            r"thank\s+you(\s+very\s+much)?\s+for\s+your\s+time",
-            r"(?i)\b(thank\s*you(?:\s*very\s*much)?|(?:thanks|thankyou)(?:\s+(?:very\s+much))?)(?:\s*(?:for)\s*your\s*time)\b",
+            # r'thank you for your time',
+            # r"thank\s+you(\s+very\s+much)?\s+for\s+your\s+time",
+            # r"(?i)\b(thank\s*you(?:\s*very\s*much)?|(?:thanks|thankyou)(?:\s+(?:very\s+much))?)(?:\s*(?:for)\s*your\s*time)\b",
         ]
     def process_message(self, message):
         if self.questionsAsked == 0 and not (message.startswith(("My name is", r"Hi(,?) I am", r"Hi(,?) My name is", r"Hello(,?) My name is", r"Hello(,?) I am"))):
@@ -60,64 +100,83 @@ class Interview:
         # Bot Prompt
         self.messages.append({"role": "user", "content": message})
         try:
-            self.chatbot = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=self.messages, max_tokens = 450)
+            self.chatbot = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=self.messages)
         except Exception as e:
             return -2
             
-        
         reply = self.chatbot.choices[0].message.content
         self.messages.append({"role": "system", "content": reply})
 
-        # Score Prompt
-        self.score_message.append({"role": "user", "content": message})
-        try:
-            self.scoreBot = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=self.score_message, max_tokens = 1)
-        except Exception as e:
-            return -2
-        score0 = self.scoreBot.choices[0].message.content
-        
         # Stop_words checkings for the bot
         if any(re.match(pattern, message, re.IGNORECASE) for pattern in self.stop_patterns):
             return 0
         
+        if self.questionsAsked > 19:
+            return 1
         # Stop_words checkings for the bot
         for pattern in self.patterns:
             match = re.search(pattern, reply, flags=re.IGNORECASE)
             if match or self.questionsAsked > 19:
                 return 1
 
+        self.questions.append(reply)
+        if self.questionsAsked > 0:
+            self.answers.append(message)
+
         # Score Calculations
         blobReply = TextBlob(reply)
         blobMessage = TextBlob(message)
         tone_score = blobMessage.sentiment.polarity
         understanding_score = blobReply.sentiment.polarity
-        score1 = round((tone_score + 1) * 5)
-        score2 = round((understanding_score + 1) * 5)
-        if score0.isdigit():
-            self.scoreByBot += int(score0)
-        else:
-            self.scoreByBot += 0
-        self.scoreByTone += score1
-        self.scoreByAnswer += score2
-        self.questionsAsked += 1
         
+        if self.questionsAsked >= 1:
+            score1 = ((tone_score + 1) * 5)
+            score2 = ((understanding_score + 1) * 5)
+            ## Score Prompt
+            # self.score_message.append({"role": "user", "content": f"Question: {self.questions[-1]}, Answer: {self.answers[-1]}"})
+            # try:
+            #     self.scoreBot = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=self.score_message, max_tokens = 1)
+            # except Exception as e:
+            #     return -2
+            
+            
+            # score0 = self.scoreBot.choices[0].message.content
+            score0 = score_maker(self.questions[-2], self.answers[-1], model="gpt-3.5-turbo", max_tokens=1)
+            print(score0)
+            if score0.isdigit() and score0 is not None and score0 != "0" and score0 != "0.0":
+                self.scoreCount_0 += 1
+                self.scoreByBot += float(score0)
+            if score1 > 0.5:
+                self.scoreCount_1 += 1
+            if score2 > 0.5: 
+                self.scoreCount_2 += 1
+            self.scoreByTone += score1
+            self.scoreByAnswer += score2
+        self.questionsAsked += 1
         # Tone Checkings
-        if self.questionsAsked > 5 and self.scoreByTone < 3:
+        if self.questionsAsked > 5 and self.scoreByTone < 2:
             return -1
+        
         return reply
 
-    def run(self):
-        message = input("user: ")
+    def get_report_data(self):
+        format_style = 'Report:: Candidate Background: , Strengths: ,Areas To Improve: ,Recomendations: ,'
+        report = report_maker(self.questions, format_style, self.answers, model="gpt-3.5-turbo", max_tokens=250)
+        return report
+    
+    def run(self,message):
         if message:
             try:
+                scores = []
                 response = self.process_message(message)
+                scores.append(round(safe_division(self.scoreByTone, self.scoreCount_1), 2))
+                scores.append(round(safe_division(self.scoreByAnswer, self.scoreCount_2), 2))
+                scores.append(round(safe_division(self.scoreByBot, self.scoreCount_0),2 ))              
                 if response == 0:
-                    BotAnswer = "Interview stopped.\n Your Score By Tone is: {:.2f} \nYour Score By Understanding is: {:.2f} \nYour Score By Bot is: {}".format(
-                        self.scoreByTone / self.questionsAsked, self.scoreByAnswer / self.questionsAsked, self.scoreByBot)
+                    BotAnswer = "Interview stopped. Thank you for your time."
                     BotStatus = 0
                 elif response == 1:
-                    BotAnswer = "Interview completed. Great, It was great interviewing you\n Your Score By Tone is: {:.2f} \nYour Score By Understanding is: {:.2f} \nYour Score By Bot is: {}".format(
-                        self.scoreByTone / self.questionsAsked, self.scoreByAnswer / self.questionsAsked, self.scoreByBot)
+                    BotAnswer = "Interview completed. It was great interviewing you\n"
                     BotStatus = 0
                 elif response == -1:
                     response = "Interview stopped. \nUnfortunately, we can't continue with the interview at this time due to the tone of our interaction. Thank you for your time."     
@@ -126,21 +185,29 @@ class Interview:
                 else:
                     BotAnswer = response
                     BotStatus = 1
-                return BotAnswer, BotStatus
+                return BotAnswer,BotStatus, scores
             except Exception as e:
                 print(e)
-                print("Something went wrong. Please try again.")
-                    
-def process_begin(name):
-    interview = Interview(name)
-    print("Hello {}! Let's start the interview. Please answer the following questions as accurately as possible.".format(name))
+                print("Something went wwrong. Please try again.")
 
-    while True:
-        returnAns = interview.run()
-        if returnAns[1] == False:
-            break
-        print("Bot: ")
-        return(returnAns[0])
+
+
+
+interview = Interview("Maaz") 
+# bot = interview.run("Please start the interview")
+
+# while True:
+#     print("Bot: ",bot[0])    
+#     print("\nBotscores: ",bot[2])   # Scores: [Tone, Understanding, Bot]
+#     if bot[1] == 0:                 # If interview is completed or stopped
+#         print(interview.get_report_data())
+#         break        
+#     message = input("User: ")
+#     bot = interview.run(message)
+                   
+def process_begin(data):
+    returnAns = interview.run(data)
+    return returnAns
 
 app =  Flask(__name__,template_folder="templates")
 
@@ -148,12 +215,19 @@ app =  Flask(__name__,template_folder="templates")
 def aut():
     return render_template("InterviewBot.html")
 
-@app.route("/receive-data",methods=["POST"])
+@app.route("/starter",methods=["POST","GET"])
+def runner():
+    data = request.get_json()
+    ans = interview.run(str(data))
+    return str(ans[0])
+
+@app.route("/receive-data",methods=["POST","GET"])
 def receive_data():
     data = request.get_json()
-    print("data",data)
     result = process_begin(str(data))
-    return str(data)
+    scores = result[2] # Scores: [Tone, Understanding, Bot]
+    # Check the bot status first and then send the data
+    return str(result[0])
 
 if __name__ == "__main__":
     # Name of candidate will be fetched from the google sheets
