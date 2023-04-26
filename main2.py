@@ -2,12 +2,10 @@ import openai
 import os
 from textblob import TextBlob
 import re
-from flask import Flask, request, render_template
 
 try:
-    #openai.api_key = os.environ["OPENAI_API_KEY"]
-    openai.api_key = None
-    openai.organization = "org-xRa0c7tnwf5bRNW4GIS4IWH8"
+    openai.api_key = os.environ["OPENAI_API_KEY"]
+    
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
     
@@ -131,30 +129,15 @@ class Interview:
                 print(e)
                 print("Something went wrong. Please try again.")
                     
-def process_begin(name):
-    interview = Interview(name)
-    print("Hello {}! Let's start the interview. Please answer the following questions as accurately as possible.".format(name))
+                    
 
-    while True:
-        returnAns = interview.run()
-        if returnAns[1] == False:
-            break
-        print("Bot: ")
-        return(returnAns[0])
-
-app =  Flask(__name__,template_folder="templates")
-
-@app.route("/")
-def aut():
-    return render_template("InterviewBot.html")
-
-@app.route("/receive-data",methods=["POST"])
-def receive_data():
-    data = request.get_json()
-    print("data",data)
-    result = process_begin(str(data))
-    return str(data)
 
 if __name__ == "__main__":
     # Name of candidate will be fetched from the google sheets
-    app.run
+    interview = Interview("Ashad")
+    while True:
+        returnAns = interview.run()
+        print("Bot: ", returnAns[0])
+        if returnAns[1] == False:
+            break
+    
