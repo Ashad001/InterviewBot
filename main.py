@@ -3,10 +3,10 @@ import os
 from textblob import TextBlob
 import re
 from flask import Flask, request, render_template
+from reportMailscript import send_mail
 
 try:
-    # openai.api_key = os.environ["OPENAI_API_KEY"]
-    openai.api_key = "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"
+    openai.api_key = os.environ["OPENAI_API_KEY"]
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
