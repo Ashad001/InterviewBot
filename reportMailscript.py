@@ -15,15 +15,15 @@ def send_mail(recievermail, scores, report):
     message["Subject"] = "Score and Report"
     message["From"] = sender_email  
     message["To"] = receiver_email
-    text = f"Hi,\n\nHere are your recent scores: {scores[0]}, {scores[1]}, {scores[2]}.\n\n{report}"
+    text = f"Hi,\n\nHere are your scores\n Score By Tone: {scores[0]} / 10.0\n Score by Question Understanding {scores[1]} / 10.0\n Score By Bot: {scores[2]} \ 10.0.\n\n{report}"
     # HTML content
     html = f"""
         <html>
             <body>
                 <p>Hi,<br>
-                Here are your recent scores: {scores[0]}, {scores[1]}, {scores[2]}.<br>
+                Here are your scores <br> Score By Tone: {scores[0]}/10.0 <br> Score by Question Understanding: {scores[1]}/10.0 <br> Score By Bot: {scores[2]}/10.0.<br>
                 <br>
-                {report}<br>
+                Detailed Report of Your Interivew <br> <br> {report}<br>
                 <br>
                 </p>
             </body>
@@ -50,11 +50,6 @@ def send_mail(recievermail, scores, report):
         print(f"Something went wrong while sending the email: {e}")
     finally:
         server.quit()
-
-
-scores = [10, 10, 10]
-report = "This is a report"
-send_mail("ashadq345@gmail.com", scores, report)
 
 
 
