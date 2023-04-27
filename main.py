@@ -192,46 +192,49 @@ class Interview:
 
 
 
-
 interview = Interview("Maaz") 
-bot = interview.run("Please start the interview")
-
-while True:
-    print("Bot: ",bot[0])    
-    print("\nBotscores: ",bot[2])   # Scores: [Tone, Understanding, Bot]
-    if bot[1] == 0:                 # If interview is completed or stopped
-        # print(interview.get_report_data())
-        report = interview.get_report_data()
-        scores = bot[2]
-        send_mail("ashadq345@gmail.com", scores=scores, report=report)
-        break        
-    message = input("User: ")
-    bot = interview.run(message)
+# bot = interview.run("Please start the interview")
+# while True:
+#     print("Bot: ",bot[0])    
+#     print("\nBotscores: ",bot[2])   # Scores: [Tone, Understanding, Bot]
+#     if bot[1] == 0:                 # If interview is completed or stopped
+#         # print(interview.get_report_data())
+#         report = interview.get_report_data()
+#         scores = bot[2]
+#         send_mail("ashadq345@gmail.com", scores=scores, report=report)
+#         break        
+#     message = input("User: ")
+#     bot = interview.run(message)
                    
-# def process_begin(data):
-#     returnAns = interview.run(data)
-#     return returnAns
+def process_begin(data):
+    returnAns = interview.run(data)
+    return returnAns
 
-# app =  Flask(__name__,template_folder="templates")
+app =  Flask(__name__,template_folder="templates")
 
-# @app.route("/")
-# def aut():
-#     return render_template("InterviewBot.html")
+@app.route("/")
+def aut():
+    return render_template("InterviewBot.html")
 
-# @app.route("/starter",methods=["POST","GET"])
-# def runner():
-#     data = request.get_json()
-#     ans = interview.run(str(data))
-#     return str(ans[0])
+@app.route("/starter",methods=["POST","GET"])
+def runner():
+    data = request.get_json()
+    ans = interview.run(str(data))
+    return str(ans[0])
 
-# @app.route("/receive-data",methods=["POST","GET"])
-# def receive_data():
-#     data = request.get_json()
-#     result = process_begin(str(data))
-#     scores = result[2] # Scores: [Tone, Understanding, Bot]
-#     # Check the bot status first and then send the data
-#     return str(result[0])
+@app.route("/receive-data",methods=["POST","GET"])
+def receive_data():
+    data = request.get_json()
+    result = process_begin(str(data))
+    scores = result[2] # Scores: [Tone, Understanding, Bot]
+    if result[1] == 0:
+        scores = scores
+        report = interview.get_report_data()
+        send_mail("ashadq345@gmail.com", scores=scores, report=report)
+        exit()
+    # Check the bot status first and then send the data
+    return str(result[0])
 
-# if __name__ == "__main__":
-#     # Name of candidate will be fetched from the google sheets
-#     app.run()
+if __name__ == "__main__":
+    # Name of candidate will be fetched from the google sheets
+    app.run()

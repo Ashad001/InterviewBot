@@ -6,8 +6,14 @@ from email.mime.multipart import MIMEMultipart
 def send_mail(recievermail, scores, report):
     port = 465  # For SSL
     receiver_email = recievermail
-    sender_email = "ashad001sp@gmail.com"
-    password = "tessgggmtkzxahra"
+    # read mail from file
+    with open("mail.txt", "r") as f:
+        sender_email = f.read()
+    # password read from file
+    with open("password.txt", "r") as f:
+        password = f.read()
+    
+    
     smtp_server = "smtp.gmail.com"
     scores = scores
     report = report
@@ -50,6 +56,3 @@ def send_mail(recievermail, scores, report):
         print(f"Something went wrong while sending the email: {e}")
     finally:
         server.quit()
-
-
-
