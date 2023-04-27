@@ -7,7 +7,7 @@ def send_mail(recievermail, scores, report):
     port = 465  # For SSL
     receiver_email = recievermail
     # read mail from file
-    with open("mail.txt", "r") as f:
+    with open("readmail.txt", "r") as f:
         sender_email = f.read()
     # password read from file
     with open("password.txt", "r") as f:
