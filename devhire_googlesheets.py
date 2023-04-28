@@ -1,7 +1,7 @@
 import gspread #for sheets
 import re #for string verification such as email and name formats
 
-gc = gspread.service_account(filename='sheetAuth.json') #giving sheet access
+gc = gspread.service_account(filename='sheetAuth.json') #giving sheet access , NOTE: this is a credential file and therfore needs to be hidden
 wks = gc.open("devhire_Database").sheet1
 
 def validate_email(email):
