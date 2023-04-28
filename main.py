@@ -230,7 +230,7 @@ def receive_data():
     if result[1] == 0:
         scores = scores
         report = interview.get_report_data()
-        send_mail("ashadq345@gmail.com", scores=scores, report=report)
+        send_mail("ashad001sp@gmail.com", scores=scores, report=report)
         exit()
     # Check the bot status first and then send the data
     return str(result[0])
