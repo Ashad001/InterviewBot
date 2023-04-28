@@ -24,18 +24,40 @@
     <!-- <link rel="stylesheet" href="./InterviewBot.css"> -->
     <title>DevDay - InterviewBot</title>
     <style>
+.progress-container {
+    background-color: #ddd;
+    height: 500px; /* Set the height of the container to the desired height */
+    width: 25px; /*Set the width of the container to the desired width*/
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    justify-self: center;
+}
+
+.progress-bar {
+    height: 30%; /* Set the height of the progress bar to the initial progress value */
+    width: 100%;
+    background-color: #10a2a4;
+    border-radius: 10px;
+    transform-origin: bottom;
+}
+
 .InterviewBot-Container {
     display: flex;
 }
 
 .Score {
+    display: flex;
     height: 100vh;
     border: 1px solid lightgrey;
+    justify-content: center;
+    align-items: center;
 }
 
 .Primary-Section {
     height: 100vh;
-    padding: 50px;
+    padding: 50px 10px;
     overflow: auto;
 }
 
@@ -252,13 +274,22 @@
     60% {opacity: 0;}
     100% {opacity: 0;}
 }
+
+.blur{
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -o-filter: blur(2px);
+    -ms-filter: blur(2px);
+}
     </style>
 </head>
 
 <body>
     <div class="container-fluid InterviewBot-Container">
-        <div class="Score d-none d-lg-block col-lg-3" id="score">
-            <!-- SHAHEER NIGGA WORK HERE YOOOOO -->
+        <div class="Score d-lg-flex d-none col-lg-3" id="score"> <!-- d-none d-lg-block -->
+            <div class="progress-container">
+                <div class="progress-bar progress-bar-striped progress-bar-animated"></div>
+            </div>
         </div>
 
         <div class="col-12 Primary-Section col-lg-9 container">
@@ -306,16 +337,16 @@
                 </div>
             </div>
             <div class="InputFieldDiv col-8 container" id="input">
-                <input type="text" class="col-8 col-md-9" id="InputField" placeholder="Type here or use voice control"
-                    onkeypress="check(event)" onkeyup="active(this)">
-                <button class="voiceSend"><i class="bi bi-mic" id="voiceArrow"></i></button>
-                <button class="textSend"><i class="bi bi-send" onclick="send()" id="textArrow"></i></button>
+                <input type="text" class="col-8 col-md-9" id="InputField" placeholder="Type here or use voice control" onkeypress="check(event)" onkeyup="active(this)">
+                <button class="voiceSend"><i class="fa-solid fa-microphone fa-beat" id="voiceArrow" onclick="voice()"></i></button>
+                <button class="textSend"><i class="fa-solid fa-paper-plane" onclick="send()" id="textArrow"></i></button>
             </div>
         </div>
     </div>
 
     <!-- <script src="InterviewBot.js"></script> -->
-    <script>window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    <script>
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new window.SpeechRecognition();
         recognition.interimResults = false;
         let listening = false;
@@ -331,19 +362,38 @@
         let voice_arrow = document.getElementById('voiceArrow');
 
         text_area.style.display = 'none';
-        input.style.display = 'none';
-        score.style.display = 'none';
+        input.className += ' blur';
+        score.className += ' blur';
+        text.disabled = true;
         
         send_arrow.style.opacity = 0.5;
         send_arrow.onclick = 'null';
         send_arrow.style.cursor = 'default';
         voice_arrow.classList.remove('fa-beat');
+        voice_arrow.style.opacity = 0.5;
+        voice_arrow.onclick = 'null';
+        voice_arrow.style.cursor = 'default';
+
         
+        function voice() {
+            if(!listening)
+            {
+                console.log("DevHire is listening.");
+                voice_arrow.classList.add('fa-beat');
+                recognition.start();
+                listening = true;
+            }
+            else
+            {
+                console.log("DevHire is already listening.");
+            }
+        }
+
         recognition.addEventListener("result", (e) => {
-            const voice_input = Array.from(e.results)
-                .map((result) => result[0])
-                .map((result) => result.transcript)
-                .join("");
+        const voice_input = Array.from(e.results)
+            .map((result) => result[0])
+            .map((result) => result.transcript)
+            .join("");
             if (e.results[0].isFinal) 
             {
                 if(text.value!="")
@@ -370,27 +420,14 @@
                 }
                 active(text);
             }
+            voice_arrow.classList.remove('fa-beat');
         });
-        
+
         recognition.addEventListener("end", () => {
             console.log("DevHire stopped listening.");
             listening = false;
             voice_arrow.classList.remove('fa-beat');
-            });
-            
-            document.getElementById("voiceArrow").addEventListener("click", () => {
-            if (!listening) 
-            {
-                console.log("DevHire is listening.");
-                voice_arrow.classList.add('fa-beat');
-                recognition.start();
-                listening = true;
-            } 
-            else 
-            {
-                console.log("DevHire is already listening.");
-            }
-            });
+        });
         
         function check(event) 
         {
@@ -419,6 +456,9 @@
         
         function send()
         {
+            console.log("DevHire stopped listening.");
+            listening = false;
+            voice_arrow.classList.remove('fa-beat');
             if(text.value.length>0)
             {
                 createEl('user',"");
@@ -511,11 +551,15 @@
 
         function startInt()
         {
+            text.disabled = false;
             text_area.style.display = 'block';
-            input.style.display = 'block';
-            score.style.display = 'block';
+            score.classList.remove('blur');
+            input.classList.remove('blur');
             rules.style.display = 'none';
             start.onclick = 'null';
+            voice_arrow.style.opacity = 1;
+            voice_arrow.style.cursor = 'pointer';
+            voice_arrow.addEventListener("click",voice);
 
             const prompt = "Please start the interview";
 
