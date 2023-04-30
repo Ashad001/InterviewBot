@@ -24,20 +24,68 @@
     <!-- <link rel="stylesheet" href="./InterviewBot.css"> -->
     <title>DevDay - InterviewBot</title>
     <style>
-
         .InterviewBot-Container {
             display: flex;
+        }
+
+        .score-bars-container {
+            margin-top: 20px;
         }
 
         .Score {
             display: flex;
             flex-direction: column;
+            justify-content: space-between;
             padding: 30px;
-            height: 100vh;
+            font-weight: 200;
+            overflow: auto;
+            height: max-content;
             border: 1px solid lightgrey;
+            margin: 10px auto;
         }
 
-        .score-bars-container{
+        .score-name {
+            color: #10a2a4;
+            font-size: larger;
+            font-weight: 300;
+        }
+
+        .score-number-obtained {
+            color: #10a2a4;
+            font-weight: 200;
+            font-size: 22px;
+        }
+
+        .score-prompt-container {
+            margin-top: 20px;
+        }
+
+        .score-prompt {
+            outline: 1px solid lightgray;
+            width: fit-content;
+            height: max-content;
+            min-height: 300px;
+            display: grid;
+            padding: 12px;
+            align-content: space-between;
+            border-radius: 4px;
+            font-weight: 300px;
+        }
+
+        .score-regards h6 {
+            text-align: right;
+        }
+
+        .progress {
+            height: 6px;
+        }
+
+        .progress-bar {
+            /* width: 50%; */
+            background-color: #10a2a4;
+        }
+
+        .score-bars-container {
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
@@ -201,21 +249,35 @@
         }
 
         .Capabilities-info {
-            border-radius: 10px;
-            border: 1px solid white;
+            display: flex;
+            align-items: center;
+            border-radius: 6px;
             font-size: 15px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #10a2a4;
             color: white;
+            padding: 15px 15px;
+            margin: 0px 10px;
         }
 
         .Limits-info {
-            border-radius: 10px;
-            border: 1px solid white;
+            border-radius: 6px;
             font-size: 15px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #10a2a4;
             color: white;
+            padding: 15px 15px;
+            display: flex;
+            margin: 0px 10px;
+            align-items: center;
+        }
+
+        .Capabilities-info p {
+            margin: 0px !important;
+        }
+
+        .Limits-info p {
+            margin: 0px !important;
         }
 
         .info {
@@ -287,41 +349,169 @@
             -o-filter: blur(2px);
             -ms-filter: blur(2px);
         }
+
+        .score-group {
+            margin-bottom: 20px;
+        }
+
+        .Score-Board-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            border-radius: 20px;
+            height: 60px;
+            font-size: 26px;
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: white;
+            --bs-btn-bg: #10a2a4;
+            --bs-btn-border-color: white;
+            --bs-btn-hover-color: #10a2a4;
+            --bs-btn-hover-bg: white;
+            --bs-btn-hover-border-color: #10a2a4;
+            border: 2px solid;
+            --bs-btn-focus-shadow-rgb: black;
+            --bs-btn-active-color: #10a2a4;
+            --bs-btn-active-bg: white;
+            --bs-btn-active-border-color: #10a2a4;
+        }
+
+        .offcanvas {
+            overflow: auto;
+        }
+
+        #Score-Board-btn-div {
+            z-index: 10000;
+            margin: 10px 0px 0px 10px;
+            position: absolute;
+            visibility: hidden;
+        }
+
+        @media (max-width: 991px) {
+            #Score-Board-btn-div {
+                visibility: visible;
+            }
+
+            .offcanvas {
+                visibility: visible;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .offcanvas.show {
+                visibility: hidden;
+            }
+        }
     </style>
 </head>
 
 <body>
+
     <div class="container-fluid InterviewBot-Container">
+
         <div class="Score d-lg-flex d-none col-lg-3" id="score">
             <div class="score-heading-container">
-                <h1>Score Board</h1>
+                <h1 class="display-6 ">Score Board</h1>
             </div>
             <div class="score-bars-container">
                 <div class="score-group">
                     <div class="score-name">Tone</div>
-                    <div class="score-number"><p id="tone"></p> / 10.0</div>
+                    <div class="score-number"><span class="score-number-obtained" id="tone"></span> / 10.0</div>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" id="tone-bar"></div>
                     </div>
                 </div>
                 <div class="score-group">
                     <div class="score-name">Understanding</div>
-                    <div class="score-number"><p id="understanding"></p> / 10.0</div>
+                    <div class="score-number"><span class="score-number-obtained" id="understanding"></span> / 10.0
+                    </div>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" id="und-bar"></div>
                     </div>
                 </div>
                 <div class="score-group">
                     <div class="score-name">AI Score</div>
-                    <div class="score-number"><p id="AIscore"></p> / 10.0</div>
+                    <div class="score-number"><span class="score-number-obtained" id="AIscore"></span> / 10.0</div>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped progress-bar-animated" id="ai-bar"></div>
                     </div>
                 </div>
             </div>
-            <div class="score-prompt-container"></div>
+            <div class="score-prompt-container">
+                <div class="score-prompt">
+                    <p class="score-text">
+                        Accent/speech patterns may affect score.<br>
+                        Scoring system is based on specific criteria. Inadequate answers may get a lower score.<br>
+                        We encourage you to be clear and concise in your speech/answers to minimize
+                        misunderstandings.<br>
+                    </p>
+                    <span class="score-regards">All the best for the interview<br>
+                        <h6>Regards<br>~ DevHire</h6>
+                    </span>
+                </div>
+            </div>
         </div>
+        <div id="Score-Board-btn-div">
+            <button class="btn Score-Board-btn" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
+                <i class="bi bi-calendar2-range"></i>
+            </button>
+            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
+                aria-labelledby="staticBackdropLabel">
+                <div class="offcanvas-header">
+                    <div class="score-heading-container">
+                        <h1 class="display-6 ">Score Board</h1>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="Score col-12" id="score">
+                    <div class="score-bars-container" style="margin: 0px;">
+                        <div class="score-group">
+                            <div class="score-name">Tone</div>
+                            <div class="score-number"><span class="score-number-obtained" id="tone2"></span> / 10.0
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="tone-bar2">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="score-group">
+                            <div class="score-name">Understanding</div>
+                            <div class="score-number"><span class="score-number-obtained" id="understanding2"></span>
+                                /
+                                10.0
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="und-bar2"></div>
+                            </div>
+                        </div>
+                        <div class="score-group">
+                            <div class="score-name">AI Score</div>
+                            <div class="score-number"><span class="score-number-obtained" id="AIscore2"></span> / 10.0
+                            </div>
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="ai-bar2"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="score-prompt-container">
+                        <div class="score-prompt">
+                            <p class="score-text">
+                                - Accent/speech patterns may affect score.<br>
+                                - Scoring system is based on specific criteria. Inadequate answers may get a lower
+                                score.<br>
+                                - We encourage you to be clear and concise in your speech/answers to minimize
+                                misunderstandings.<br>
+                            </p>
+                            <span class="score-regards">All the best for the interview<br>
+                                <h6>Regards<br>~ DevHire</h6>
+                            </span>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+        </div>
         <div class="col-12 Primary-Section col-lg-9 container">
             <div class="col-12 container" style="height: 80vh; overflow: auto;" id="textArea">
             </div>
@@ -336,30 +526,32 @@
                         <h4>Limits</h4>
                     </div>
                 </div>
-                <div class="row info-rules">
-                    <div class="col Capabilities-info container ">
-                        <p>Asks interview-style questions to simulate a real interview environment</p>
+                <div class="container">
+                    <div class="row info-rules">
+                        <div class="col Capabilities-info ">
+                            <p>Asks interview-style questions to simulate a real interview environment</p>
+                        </div>
+                        <div class="col Limits-info ">
+                            <p>May not be able to fully replicate a face-to-face interview</p>
+                        </div>
                     </div>
-                    <div class="col Limits-info container ">
-                        <p>May not be able to fully replicate a face-to-face interview</p>
+                    <div class="row info-rules">
+                        <div class="col Capabilities-info">
+                            <p>Evaluates the candidate's tone, question understanding, and overall performance using
+                                sentiment analysis</p>
+                        </div>
+                        <div class="col Limits-info">
+                            <p>Relies on the accuracy of the sentiment analysis tool</p>
+                        </div>
                     </div>
-                </div>
-                <div class="row info-rules">
-                    <div class="col Capabilities-info container ">
-                        <p>Evaluates the candidate's tone, question understanding, and overall performance using
-                            sentiment analysis</p>
-                    </div>
-                    <div class="col Limits-info container ">
-                        <p>Relies on the accuracy of the sentiment analysis tool</p>
-                    </div>
-                </div>
-                <div class="row info-rules">
-                    <div class="col Capabilities-info container ">
-                        <p>Generates a detailed report for each candidate and sends it via email</p>
-                    </div>
-                    <div class="col Limits-info container ">
-                        <p>Scoring system can be inaccurate sometimes as it does not provide feedback on nonverbal
-                            communication or body language.</p>
+                    <div class="row info-rules">
+                        <div class="col Capabilities-info">
+                            <p>Generates a detailed report for each candidate and sends it via email</p>
+                        </div>
+                        <div class="col Limits-info">
+                            <p>Scoring system can be inaccurate sometimes as it does not provide feedback on nonverbal
+                                communication or body language.</p>
+                        </div>
                     </div>
                 </div>
                 <div class="row startbutton justify-content-md-center">
@@ -395,10 +587,12 @@
         let input = document.getElementById('input');
         let score = document.getElementById('score');
         let voice_arrow = document.getElementById('voiceArrow');
+        // let stBD = document.getElementById('staticBackdrop');
 
         text_area.style.display = 'none';
         input.className += ' blur';
         score.className += ' blur';
+        // stBD.className += 'blur';
         text.disabled = true;
 
         send_arrow.style.opacity = 0.5;
@@ -457,9 +651,13 @@
         });
 
         function check(event) {
-            if (event.key == "Enter") {
+            if (event.key == "Enter" && !event.shiftKey) {
                 event.preventDefault();
                 send();
+                text.disabled = false;
+                voice_arrow.style.opacity = 1;
+                voice_arrow.style.cursor = 'pointer';
+                voice_arrow.addEventListener("click", voice);
             }
         }
 
@@ -477,7 +675,13 @@
         }
 
         function send() {
-            console.log("DevHire stopped listening.");
+            console.log("Message Sent.");
+            text.disabled = true;
+            send_arrow.onclick = 'null';
+            send_arrow.style.cursor = 'default';
+            voice_arrow.style.opacity = 0.5;
+            voice_arrow.onclick = 'null';
+            voice_arrow.style.cursor = 'default';
             listening = false;
             voice_arrow.classList.remove('fa-beat');
             if (text.value.length > 0) {
@@ -492,9 +696,12 @@
                         "Content-Type": "application/json"
                     },
                 })
-                    .then(response => response.text())
+                    .then(response => response.json())
                     .then(data => {
-                        createEl('bot', data);
+                        var Botdata = data.ans;
+                        var scoresList = data.score;
+                        createEl('bot', Botdata);
+                        adjust_Scores(scoresList);
                         text_area.scrollTop = text_area.scrollHeight;
                     })
                     .catch(error => console.error(error));
@@ -571,6 +778,7 @@
             text_area.style.display = 'block';
             score.classList.remove('blur');
             input.classList.remove('blur');
+            // stBD.classList.remove('blur');
             rules.style.display = 'none';
             start.onclick = 'null';
             voice_arrow.style.opacity = 1;
@@ -592,6 +800,30 @@
                     text_area.scrollTop = text_area.scrollHeight;
                 })
                 .catch(error => console.error(error));
+        }
+
+        function adjust_Scores(scoresList) {
+            var tone_score = scoresList[0];
+            var und_score = scoresList[1];
+            var AI_score = scoresList[2];
+
+            document.getElementById('tone').innerHTML = tone_score;
+            document.getElementById('understanding').innerHTML = und_score;
+            document.getElementById('AIscore').innerHTML = AI_score;
+            document.getElementById('tone2').innerHTML = tone_score;
+            document.getElementById('understanding2').innerHTML = und_score;
+            document.getElementById('AIscore2').innerHTML = AI_score;
+
+            tone_score = tone_score * 10;
+            und_score = und_score * 10;
+            AI_score = AI_score * 10;
+
+            document.getElementById('tone-bar').style.width = tone_score + '%';
+            document.getElementById('und-bar').style.width = und_score + '%';
+            document.getElementById('ai-bar').style.width = AI_score + '%';
+            document.getElementById('tone-bar2').style.width = tone_score + '%';
+            document.getElementById('und-bar2').style.width = und_score + '%';
+            document.getElementById('ai-bar2').style.width = AI_score + '%';
         }
     </script>
 </body>
