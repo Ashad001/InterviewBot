@@ -4,6 +4,7 @@ from textblob import TextBlob
 import re
 from flask import Flask, request, render_template
 from reportMailscript import send_mail
+from devhire_googlesheets import update_sheet
 
 try:
     openai.api_key = os.environ["OPENAI_API_KEY"]
