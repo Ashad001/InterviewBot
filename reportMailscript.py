@@ -65,7 +65,3 @@ def send_mail(recievermail, scores, report):
         print(f"Something went wrong while sending the email: {e}")
     finally:
         server.quit()
-
-scores = [10, 10, 10]
-report = "Report: The candidate has an undergraduate degree from FAST and has worked on some projects with student organizations, including chatbots. During the interview, the candidate discussed a chatbot project they worked on with a team to answer frequently asked questions for an event. They used Python and specific libraries such as nltk, sklearn, and numpy. Strengths: - The candidate has experience working on chatbot projects and has knowledge of Python libraries used in chatbot development. Areas to Improve: - The candidate lacks professional work experience, which may be a disadvantage when applying for jobs. - During the interview, the candidate did not provide specific examples of their contributions to the chatbot project or how they overcame challenges during development. Providing more detailed information about their experiences and problem-solving skills could make them a stronger candidate. Recommendations: - The candidate should consider gaining more professional work experience through internships or entry-level positions to strengthen their resume. - In future interviews, the candidate should be prepared to provide specific examples of their contributions to projects and how they overcame challenges. This will demonstrate their problem-solving skills and make them a more competitive candidate."
-send_mail("ashad001sp@gmail.com", scores, report)
