@@ -109,11 +109,11 @@ while True:
         else:
             row_num = cell.row
             first_name = wks.cell(row_num,1).value
-            score1 = wks.cell(row_num,4).value
-            score2 = wks.cell(row_num,5).value
-            score3 = wks.cell(row_num,6).value
+            Tone = wks.cell(row_num,4).value
+            Understanding = wks.cell(row_num,5).value
+            Ai_Analysis = wks.cell(row_num,6).value
             verify_user()
-            print(f"Welcome back {first_name}, You have signed in successfully\nHere are your scores from your last session\nSCORE 1: {score1}\nSCORE 2: {score2}\nSCORE 3: {score3}")
+            print(f"Welcome back {first_name}, You have signed in successfully\nHere are your scores from your last session\nTone Score: {Tone}\nUnderstanding Score: {Understanding}\nAi Analysis: {Ai_Analysis}")
         break
 
     if choice == "n" or choice == "N":
