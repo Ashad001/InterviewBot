@@ -160,7 +160,7 @@ class Interview:
         return reply
 
     def get_report_data(self):
-        format_style = 'Report:: Candidate Background: , Strengths: ,Areas To Improve: ,Recomendations: ,'
+        format_style = 'Report:: Background: , Strengths: ,Enhancement: ,Recomendations: ,'
         report = report_maker(self.questions, format_style, self.answers, model="gpt-3.5-turbo", max_tokens=250)
         return report
     
