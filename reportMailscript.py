@@ -37,7 +37,7 @@ def send_mail(recievermail, scores, report):
             <body>
             <div class="content" style="align: left 1px; background: -webkit-linear-gradient(0deg,#39b1b2 ,#000000 100%);">
                 <p style="font-size: 2.5em>Dear Participant,</p><br>
-                <p style="font-size: 2.3em>Congratultion... You have completed your interview through DevHire</p>
+                <p style="font-size: 2.3em>Congratulations... You have completed your interview through DevHire</p>
                 <p style="font-size: 2em>Here are your scores <br> Score By Tone: {scores[0]}/10.0 <br> Score by Question Understanding: {scores[1]}/10.0 <br> Score By Bot: {scores[2]}/10.0.</p><br>
                 <br>
                 <p style="font-size: 2em>Detailed Report of Your Interivew</p> <br> <br><p style="font-size: 1.5em> { report }</p><br>
