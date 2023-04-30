@@ -7,9 +7,10 @@ from email.mime.multipart import MIMEMultipart
 import smtplib
 import time
 import ssl
-gc = gspread.service_account(filename='E:/fourth sem/Shit/InterviewBot/sheetAuth.json') #giving sheet access
+from IPython.display import Image
+gc = gspread.service_account(filename='C:/Users/Abdul Haseeb/Desktop/InterviewBot/sheetAuth.json') #giving sheet access
 wks = gc.open("devhire_Database").sheet1
-
+img = 'email_logo.png'
 def validate_email(email):
     pattern = r'^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$'
     return re.match(pattern, email)
@@ -24,7 +25,7 @@ def gen_email_otp():
 
 context = ssl.create_default_context() 
 def send_otp_email(name, email,verification_code):
-    with open('E:/fourth sem/Shit/InterviewBot/login.txt', 'r') as f:
+    with open('C:/Users/Abdul Haseeb/Desktop/InterviewBot/login.txt', 'r') as f:
         lines = f.readlines()
         devhire_email = lines[0].strip()
         devhire_email_password = lines[1].strip()
@@ -44,20 +45,20 @@ def send_otp_email(name, email,verification_code):
         <!-- Logo section -->
         <div id="logo">
             <td style="background-color:white;">
-                <img src="./email_logo.png" height="250" width=auto style="padding-top: 1rem;">
+                <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="logo.png" height="250" width=auto style="padding-top: 1rem;">
             </td>
         </div>
 
         <!-- Main content -->
         <div class="content" style="align: left 1px; background: -webkit-linear-gradient(0deg,#39b1b2 ,#000000 100%);">
-            <h1 style="font-size: 2.5em;"> {verification_code} </h1>
+            <h1 style="font-size: 2.5em;">Verification Code</h1>
             <p style="font-size: 1.5em;">Please use the verification code below to sign in.</p>
             <br>
             <table>
                 <tr>
                     <td>
                         <br>
-                        <h1 strong style="font-size:3.5em; color:#ffffff;letter-spacing: 0.2em;">847117</h3>
+                        <h1 strong style="font-size:3.5em; color:#ffffff;letter-spacing: 0.2em;">{verification_code} </h3>
                     </td>
                 </tr>
             </table>
