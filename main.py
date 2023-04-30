@@ -3,11 +3,11 @@ import os
 from textblob import TextBlob
 import re
 from flask import Flask, request, render_template
-from reportMailscript import send_mail
-from devhire_googlesheets import update_sheet
+# from reportMailscript import send_mail
 
 try:
     openai.api_key = os.environ["OPENAI_API_KEY"]
+    # openai.api_key = ""
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
@@ -15,7 +15,7 @@ def safe_division(numerator, denominator):
     try:
         return numerator / denominator
     except ZeroDivisionError:
-        return numerator    
+        return numerator
 
 def report_maker(questions, format_style, answers, model = "gpt-3.5-turbo", max_tokens = 250):
     messages = [
@@ -53,28 +53,28 @@ class Interview:
             "role": "system",
             "content": "You are a interviewer named DevHire and you are interviewing a candidate for a job. \
                         You are asking the candidate about his/her experience. \
-                        You can ask detail questions about the candidate's education, technical terminologies and anything else you think is relevant to their work. \
+                        You can ask about the candidate's previous work experience, education, or anything else you think is relevant to the job. \
                         Assess the candidate's ability to analyze problems and provide effective solutions. Can they think critically and creatively to solve complex problems?  \
                         You can also ask the candidate about various programming questions such as code completion and bug fixes. \
                         Assess whether the candidate's values, personality, and work style align with the company culture and team dynamics \
                         User will answer your questions one by one and you have to verify whether it is correct or not, its overall behaviour and tone throughout the interview should also be noted. "
             },
         ]
-        
-        self.score_message = [ 
+
+        self.score_message = [
             {
                 "role": "assistant",
-                "content": "Rate the message given out of 10, based on its correctness, tone and overall behaviour comparing with the question asked! Only write the score where you can (no need to explain the score) otherwise score 0'.",   
+                "content": "Rate the message given out of 10, based on its correctness, tone and overall behaviour comparing with the question asked! Only write the score where you can (no need to explain the score) otherwise score 0'.",
             }
         ]
-        
+
         self.score_pattern = re.compile(r'\d+')
         self.scoreByAnswer = 0
         self.scoreByTone = 0
         self.scoreByBot = 0
         self.x_value = 0
         self.questionsAsked = 0
-        
+
         self.scoreCount_0 = 0
         self.scoreCount_1 = 0
         self.scoreCount_2 = 0
@@ -83,12 +83,12 @@ class Interview:
         ]
         self.questions = []
         self.answers = []
-        
+
         self.patterns = [
             r'(if|do) you have any (questions|concerns)',
             r'Let me know if you change your mind\b',
             r'(?:Is there anything else you would like to add|Do you have any questions for us?)\??',
-            r'Good luck with your job search(?!.*Good luck with your job search)', 
+            r'Good luck with your job search(?!.*Good luck with your job search)',
             r"we'll keep you updated on any developments",
             # r'thank you for your time',
             # r"thank\s+you(\s+very\s+much)?\s+for\s+your\s+time",
@@ -104,14 +104,14 @@ class Interview:
             self.chatbot = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=self.messages)
         except Exception as e:
             return -2
-            
+
         reply = self.chatbot.choices[0].message.content
         self.messages.append({"role": "system", "content": reply})
 
         # Stop_words checkings for the bot
         if any(re.match(pattern, message, re.IGNORECASE) for pattern in self.stop_patterns):
             return 0
-        
+
         if self.questionsAsked > 19:
             return 1
         # Stop_words checkings for the bot
@@ -129,7 +129,7 @@ class Interview:
         blobMessage = TextBlob(message)
         tone_score = blobMessage.sentiment.polarity
         understanding_score = blobReply.sentiment.polarity
-        
+
         if self.questionsAsked >= 1:
             score1 = ((tone_score + 1) * 5)
             score2 = ((understanding_score + 1) * 5)
@@ -139,17 +139,17 @@ class Interview:
             #     self.scoreBot = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=self.score_message, max_tokens = 1)
             # except Exception as e:
             #     return -2
-            
-            
+
+
             # score0 = self.scoreBot.choices[0].message.content
             score0 = score_maker(self.questions[-2], self.answers[-1], model="gpt-3.5-turbo", max_tokens=1)
-            print(score0)
+            # print(score0)
             if score0.isdigit() and score0 is not None and score0 != "0" and score0 != "0.0":
                 self.scoreCount_0 += 1
                 self.scoreByBot += float(score0)
             if score1 > 0.5:
                 self.scoreCount_1 += 1
-            if score2 > 0.5: 
+            if score2 > 0.5:
                 self.scoreCount_2 += 1
             self.scoreByTone += score1
             self.scoreByAnswer += score2
@@ -157,22 +157,22 @@ class Interview:
         # Tone Checkings
         if self.questionsAsked > 5 and self.scoreByTone < 2:
             return -1
-        
+
         return reply
 
     def get_report_data(self):
-        format_style = 'Report:: Background: , Strengths: ,Enhancement: ,Recomendations: ,'
+        format_style = 'Report:: Candidate Background: , Strengths: ,Areas To Improve: ,Recomendations: ,'
         report = report_maker(self.questions, format_style, self.answers, model="gpt-3.5-turbo", max_tokens=250)
         return report
-    
+
     def run(self,message):
         if message:
             try:
                 scores = []
                 response = self.process_message(message)
-                scores.append(round(safe_division(self.scoreByTone, self.scoreCount_1), 2))
-                scores.append(round(safe_division(self.scoreByAnswer, self.scoreCount_2), 2))
-                scores.append(round(safe_division(self.scoreByBot, self.scoreCount_0),2 ))              
+                scores.append(round(safe_division(self.scoreByTone, self.scoreCount_1), 1))
+                scores.append(round(safe_division(self.scoreByAnswer, self.scoreCount_2), 1))
+                scores.append(round(safe_division(self.scoreByBot, self.scoreCount_0), 1))
                 if response == 0:
                     BotAnswer = "Interview stopped. Thank you for your time."
                     BotStatus = 0
@@ -180,7 +180,7 @@ class Interview:
                     BotAnswer = "Interview completed. It was great interviewing you\n"
                     BotStatus = 0
                 elif response == -1:
-                    response = "Interview stopped. \nUnfortunately, we can't continue with the interview at this time due to the tone of our interaction. Thank you for your time."     
+                    response = "Interview stopped. \nUnfortunately, we can't continue with the interview at this time due to the tone of our interaction. Thank you for your time."
                 elif response == -2:
                     return "Something went wrong. Please try again."
                 else:
@@ -193,20 +193,20 @@ class Interview:
 
 
 
-interview = Interview("Maaz") 
+interview = Interview("Maaz")
 # bot = interview.run("Please start the interview")
 # while True:
-#     print("Bot: ",bot[0])    
+#     print("Bot: ",bot[0])
 #     print("\nBotscores: ",bot[2])   # Scores: [Tone, Understanding, Bot]
 #     if bot[1] == 0:                 # If interview is completed or stopped
 #         # print(interview.get_report_data())
 #         report = interview.get_report_data()
 #         scores = bot[2]
 #         send_mail("ashadq345@gmail.com", scores=scores, report=report)
-#         break        
+#         break
 #     message = input("User: ")
 #     bot = interview.run(message)
-                   
+
 def process_begin(data):
     returnAns = interview.run(data)
     return returnAns
@@ -231,10 +231,11 @@ def receive_data():
     if result[1] == 0:
         scores = scores
         report = interview.get_report_data()
-        send_mail("ashad001sp@gmail.com", scores=scores, report=report)
+        # send_mail("ashadq345@gmail.com", scores=scores, report=report)
         exit()
     # Check the bot status first and then send the data
-    return str(result[0])
+    response = {"ans":result[0],"score":scores}
+    return response
 
 if __name__ == "__main__":
     # Name of candidate will be fetched from the google sheets
