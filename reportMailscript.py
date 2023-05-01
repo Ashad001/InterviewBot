@@ -33,24 +33,68 @@ def send_mail(recievermail, scores, report):
     text = f"Hi,\n\nHere are your scores\n Score By Tone: {scores[0]} / 10.0\n Score by Question Understanding {scores[1]} / 10.0\n Score By Bot: {scores[2]} \ 10.0.\n\n{report}"
     # HTML content
     html = f"""
-        <html>
-            <body>
-            <div class="content" style="align: left 1px; background: -webkit-linear-gradient(0deg,#39b1b2 ,#000000 100%);">
-                <p style="font-size: 2.5em>Dear Participant,</p><br>
-                <p style="font-size: 2.3em>Congratulations... You have completed your interview through DevHire</p>
-                <p style="font-size: 2em>Here are your scores <br> Score By Tone: {scores[0]}/10.0 <br> Score by Question Understanding: {scores[1]}/10.0 <br> Score By Bot: {scores[2]}/10.0.</p><br>
-                <br>
-                <p style="font-size: 2em>Detailed Report of Your Interivew</p> <br> <br><p style="font-size: 1.5em> { report }</p><br>
-                <br>
+    <html>
+        <head>
+            <style>
+                .content {{
+                    background: -webkit-linear-gradient(0deg, #39b1b2, #000000 100%);
+                    padding: 2rem;
+                }}
+                .content p {{
+                    margin-bottom: 1rem;
+                }}
+                .scores {{
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    font-size: 1.1em;
+                    margin-top: 1.5rem;
+                    margin-bottom: 2rem;
+                }}
+                .score {{
+                    text-align: center;
+                }}
+                .report {{
+                    font-size: 1.2em;
+                    line-height: 1.6;
+                    margin-bottom: 2rem;
+                }}
+                .logo img {{
+                    height: 150px;
+                    width: auto;
+                    padding-top: 1rem;
+                }}
+            </style>
+        </head>
+        <body>
+            <div class="content">
+                <p style="font-size: 1.5em;">Dear Participant,</p>
+                <p style="font-size: 1.3em;">Congratulations! You have completed your interview through DevHire.</p>
+                <div class="scores">
+                    <div class="score">
+                        <p>Speech</p>
+                        <p>{scores[0]}/10.0</p>
+                    </div>
+                    <div class="score">
+                        <p>Understanding</p>
+                        <p>{scores[1]}/10.0</p>
+                    </div>
+                    <div class="score">
+                        <p>AI Analysis</p>
+                        <p>{scores[2]}/10.0</p>
+                    </div>
+                </div>
+                <p style="font-size: 1.2em;">Detailed Report of Your Interview:</p>
+                <div class="report">{report}</div>
             </div>
-            <div id="logo">
-            <td style="background-color:white;">
-                <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="logo.png" height="150" width=auto style="padding-top: 1rem;">
-            </td>
-        </div>    
-            </body>
-        </html>
+            <div class="logo">
+                <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="logo.png">
+            </div>
+        </body>
+    </html>
     """
+
+
     part1 = MIMEText(text, "plain")
     part2 = MIMEText(html, "html")
 
@@ -72,3 +116,6 @@ def send_mail(recievermail, scores, report):
         print(f"Something went wrong while sending the email: {e}")
     finally:
         server.quit()
+
+            
+            
