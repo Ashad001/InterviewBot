@@ -37,32 +37,32 @@ def send_otp_email(first_name,email,verification_code):
     #HTML content for email template
     html = f"""
     <!DOCTYPE html>
-<html>
-    <head>
-        <title>Verification Email</title>
-    </head>
-    <body>
-        <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
-            <div style="margin:50px auto;width:80%;padding:20px 0">
-                <div style="border-bottom:5px solid #eee">
-                    <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="logo.png"  style="display:block; margin:auto;" height="300" width=auto>
-                </div >
-                <div style="color:white; text-align:center; background: -webkit-linear-gradient(0deg,#39b1b2 ,#000000 100%);">
-                    <p style="font-size:15px;color: white;">Hello {first_name},</p>
-                    <p>Welcome To DevHire. Use this code to complete your accounts verification process.</p>
-                    <p>Remember, Never share this code with anyone.</p>
-                    <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">{verification_code}</h2>
-                    <p style="font-size:15px;">Regards,<br />Team DevHire</p>
-                </div>
-                <hr style="border:none;border-top:5px solid #eee" />
-                <div style="float:left;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
-                    <p>Contact Us</p>
-                    <p><a href="mailto:devhirecontact@gmail.com">devhirecontact@gmail.com</a>.</p>
+    <html>
+        <head>
+            <title>Verification Email</title>
+        </head>
+        <body>
+            <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+                <div style="margin:50px auto;width:80%;padding:20px 0">
+                    <div style="border-bottom:5px solid #eee">
+                        <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="logo.png"  style="display:block; margin:auto;" height="300" width=auto>
+                    </div >
+                    <div style="color:white; text-align:center; background: -webkit-linear-gradient(0deg,#39b1b2 ,#000000 100%);">
+                        <p style="font-size:15px;color: white;">Hello {first_name},</p>
+                        <p>Welcome To DevHire. Use this code to complete your accounts verification process.</p>
+                        <p>Remember, Never share this code with anyone.</p>
+                        <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">{verification_code}</h2>
+                        <p style="font-size:15px;">Regards,<br />Team DevHire</p>
+                    </div>
+                    <hr style="border:none;border-top:5px solid #eee" />
+                    <div style="float:left;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+                        <p>Contact Us</p>
+                        <p><a href="mailto:devhirecontact@gmail.com">devhirecontact@gmail.com</a>.</p>
+                    </div>
                 </div>
             </div>
-        </div>
-    </body>
-</html>
+        </body>
+    </html>
         
     """
     part1 = MIMEText(text ,'plain')

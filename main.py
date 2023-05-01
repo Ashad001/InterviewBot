@@ -6,8 +6,7 @@ from flask import Flask, request, render_template
 from reportMailscript import send_mail
 
 try:
-    # openai.api_key = os.environ["OPENAI_API_KEY"]
-    openai.api_key = "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"
+    openai.api_key = os.environ["OPENAI_API_KEY"]
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
@@ -74,6 +73,11 @@ class Interview:
         self.scoreByBot = 0
         self.x_value = 0
         self.questionsAsked = 0
+        
+        self.currentTone = 0.0;
+        self.currentUnderstanding = 0.0;
+        self.currentBot = 0.0
+        
 
         self.scoreCount_0 = 0
         self.scoreCount_1 = 0
@@ -90,9 +94,9 @@ class Interview:
             r'(?:Is there anything else you would like to add|Do you have any questions for us?)\??',
             r'Good luck with your job search(?!.*Good luck with your job search)',
             r"we'll keep you updated on any developments",
-            # r'thank you for your time',
-            # r"thank\s+you(\s+very\s+much)?\s+for\s+your\s+time",
-            # r"(?i)\b(thank\s*you(?:\s*very\s*much)?|(?:thanks|thankyou)(?:\s+(?:very\s+much))?)(?:\s*(?:for)\s*your\s*time)\b",
+            r'thank you for your time',
+            r"thank\s+you(\s+very\s+much)?\s+for\s+your\s+time",
+            r"(?i)\b(thank\s*you(?:\s*very\s*much)?|(?:thanks|thankyou)(?:\s+(?:very\s+much))?)(?:\s*(?:for)\s*your\s*time)\b",
         ]
     def process_message(self, message):
         if self.questionsAsked == 0 and not (message.startswith(("My name is", r"Hi(,?) I am", r"Hi(,?) My name is", r"Hello(,?) My name is", r"Hello(,?) I am"))):
@@ -130,27 +134,26 @@ class Interview:
         tone_score = blobMessage.sentiment.polarity
         understanding_score = blobReply.sentiment.polarity
 
+        self.currentTone = 0.65 * self.currentTone
+        self.currentUnderstanding = 0.65 * self.currentUnderstanding
+        self.currentBot = 0.65 * self.currentBot
+        
         if self.questionsAsked >= 1:
             score1 = ((tone_score + 1) * 5)
             score2 = ((understanding_score + 1) * 5)
-            ## Score Prompt
-            # self.score_message.append({"role": "user", "content": f"Question: {self.questions[-1]}, Answer: {self.answers[-1]}"})
-            # try:
-            #     self.scoreBot = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=self.score_message, max_tokens = 1)
-            # except Exception as e:
-            #     return -2
 
-
-            # score0 = self.scoreBot.choices[0].message.content
             score0 = score_maker(self.questions[-2], self.answers[-1], model="gpt-3.5-turbo", max_tokens=1)
             # print(score0)
             if score0.isdigit() and score0 is not None and score0 != "0" and score0 != "0.0":
                 self.scoreCount_0 += 1
-                self.scoreByBot += float(score0)
+                self.currentBot = float(score0)
+                self.scoreByBot += self.currentBot
             if score1 > 0.5:
                 self.scoreCount_1 += 1
+                self.currentTone = score1
             if score2 > 0.5:
                 self.scoreCount_2 += 1
+                self.currentUnderstanding = score2
             self.scoreByTone += score1
             self.scoreByAnswer += score2
         self.questionsAsked += 1
@@ -186,26 +189,22 @@ class Interview:
                 else:
                     BotAnswer = response
                     BotStatus = 1
+                if BotStatus == 1:
+                    scores.append(round(safe_division(self.scoreByTone, self.scoreCount_1), 1))
+                    scores.append(round(safe_division(self.scoreByAnswer, self.scoreCount_2), 1))
+                    scores.append(round(safe_division(self.scoreByBot, self.scoreCount_0), 1))
+                elif BotStatus == 0:
+                    scores.append(round(self.currentTone, 1))
+                    scores.append(round(self.currentUnderstanding, 1))
+                    scores.append(round(self.currentBot, 1))
                 return BotAnswer,BotStatus, scores
             except Exception as e:
                 print(e)
-                print("Something went wwrong. Please try again.")
+                print("Something went wrong. Please try again.")
 
 
 
 interview = Interview("Maaz")
-# bot = interview.run("Please start the interview")
-# while True:
-#     print("Bot: ",bot[0])
-#     print("\nBotscores: ",bot[2])   # Scores: [Tone, Understanding, Bot]
-#     if bot[1] == 0:                 # If interview is completed or stopped
-#         # print(interview.get_report_data())
-#         report = interview.get_report_data()
-#         scores = bot[2]
-#         send_mail("ashadq345@gmail.com", scores=scores, report=report)
-#         break
-#     message = input("User: ")
-#     bot = interview.run(message)
 
 def process_begin(data):
     returnAns = interview.run(data)
@@ -233,10 +232,8 @@ def receive_data():
         report = interview.get_report_data()
         send_mail("maazimam03@gmail.com", scores=scores, report=report)
         exit()
-    # Check the bot status first and then send the data
     response = {"ans":result[0],"score":scores}
     return response
 
 if __name__ == "__main__":
-    # Name of candidate will be fetched from the google sheets
     app.run()
