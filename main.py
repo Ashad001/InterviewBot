@@ -3,11 +3,11 @@ import os
 from textblob import TextBlob
 import re
 from flask import Flask, request, render_template
-# from reportMailscript import send_mail
+from reportMailscript import send_mail
 
 try:
-    openai.api_key = os.environ["OPENAI_API_KEY"]
-    # openai.api_key = ""
+    # openai.api_key = os.environ["OPENAI_API_KEY"]
+    openai.api_key = "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"
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
@@ -231,7 +231,7 @@ def receive_data():
     if result[1] == 0:
         scores = scores
         report = interview.get_report_data()
-        # send_mail("ashadq345@gmail.com", scores=scores, report=report)
+        send_mail("maazimam03@gmail.com", scores=scores, report=report)
         exit()
     # Check the bot status first and then send the data
     response = {"ans":result[0],"score":scores}
