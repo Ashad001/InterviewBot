@@ -27,8 +27,9 @@ def send_mail(recievermail, scores, report):
     formatreport = re.split(r'\r?\n|\r|\n|(\w+):', report)
     
     report = " "
-    for lines in formatreport:
-        report += (lines + '<br>') 
+    for line in formatreport:
+        if line is not None:
+            report = report + line + '<br>'
     
     text = f"Hi,\n\nHere are your scores\n Score By Tone: {scores[0]} / 10.0\n Score by Question Understanding {scores[1]} / 10.0\n Score By Bot: {scores[2]} \ 10.0.\n\n{report}"
     # HTML content

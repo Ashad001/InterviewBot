@@ -3,7 +3,7 @@ import os
 from textblob import TextBlob
 import re
 from flask import Flask, request, render_template
-from reportMailscript import send_mail
+# from reportMailscript import send_mail
 
 try:
     openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -45,8 +45,9 @@ def score_maker(question, answer, model = "gpt-3.5-turbo", max_tokens = 1):
     return response.choices[0].message['content']
 
 class Interview:
-    def __init__(self, name):
+    def __init__(self, name, user_id):
         self.name = name
+        self.user_id = user_id
         self.messages = [
             {
             "role": "system",
@@ -189,11 +190,11 @@ class Interview:
                 else:
                     BotAnswer = response
                     BotStatus = 1
-                if BotStatus == 1:
+                if BotStatus == 0:
                     scores.append(round(safe_division(self.scoreByTone, self.scoreCount_1), 1))
                     scores.append(round(safe_division(self.scoreByAnswer, self.scoreCount_2), 1))
                     scores.append(round(safe_division(self.scoreByBot, self.scoreCount_0), 1))
-                elif BotStatus == 0:
+                elif BotStatus == 1:
                     scores.append(round(self.currentTone, 1))
                     scores.append(round(self.currentUnderstanding, 1))
                     scores.append(round(self.currentBot, 1))
@@ -204,36 +205,36 @@ class Interview:
 
 
 
-interview = Interview("Maaz")
+# interview = Interview("Maaz")
 
-def process_begin(data):
-    returnAns = interview.run(data)
-    return returnAns
+# def process_begin(data):
+#     returnAns = interview.run(data)
+#     return returnAns
 
-app =  Flask(__name__,template_folder="templates")
+# app =  Flask(__name__,template_folder="templates")
 
-@app.route("/")
-def aut():
-    return render_template("InterviewBot.html")
+# @app.route("/")
+# def aut():
+#     return render_template("InterviewBot.html")
 
-@app.route("/starter",methods=["POST","GET"])
-def runner():
-    data = request.get_json()
-    ans = interview.run(str(data))
-    return str(ans[0])
+# @app.route("/starter",methods=["POST","GET"])
+# def runner():
+#     data = request.get_json()
+#     ans = interview.run(str(data))
+#     return str(ans[0])
 
-@app.route("/receive-data",methods=["POST","GET"])
-def receive_data():
-    data = request.get_json()
-    result = process_begin(str(data))
-    scores = result[2] # Scores: [Tone, Understanding, Bot]
-    if result[1] == 0:
-        scores = scores
-        report = interview.get_report_data()
-        send_mail("maazimam03@gmail.com", scores=scores, report=report)
-        exit()
-    response = {"ans":result[0],"score":scores}
-    return response
+# @app.route("/receive-data",methods=["POST","GET"])
+# def receive_data():
+#     data = request.get_json()
+#     result = process_begin(str(data))
+#     scores = result[2] # Scores: [Tone, Understanding, Bot]
+#     if result[1] == 0:
+#         scores = scores
+#         report = interview.get_report_data()
+#         send_mail("maazimam03@gmail.com", scores=scores, report=report)
+#         exit()
+#     response = {"ans":result[0],"score":scores}
+#     return response
 
-if __name__ == "__main__":
-    app.run()
+# if __name__ == "__main__":
+#     app.run()

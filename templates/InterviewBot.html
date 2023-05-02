@@ -772,6 +772,13 @@
             }
             setTimeout(loop, delay);
         }
+        function generateUserId()
+        {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+            let result = '';
+            result += chars[Math.floor(Math.random() * chars.length)];
+            return result;
+        }
 
         function startInt() {
             text.disabled = false;
@@ -785,11 +792,13 @@
             voice_arrow.style.cursor = 'pointer';
             voice_arrow.addEventListener("click", voice);
 
+            const userID = generateUserId();
             const prompt = "Please start the interview";
+
 
             fetch("/starter", {
                 method: "POST",
-                body: JSON.stringify(prompt),
+                body: JSON.stringify({"user_id": userID, "prompt": prompt}),
                 headers: {
                     "Content-Type": "application/json"
                 },
