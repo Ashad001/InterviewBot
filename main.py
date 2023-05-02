@@ -8,8 +8,7 @@ from reportMailscript import send_mail
 # from reportMailscript import send_mail
 
 try:
-    # openai.api_key = os.environ["OPENAI_API_KEY"]
-    openai.api_key = "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"
+    openai.api_key = os.environ["OPENAI_API_KEY"]
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
