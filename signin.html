@@ -1,206 +1,112 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>User Registration Form</title>
-    <style>
-      
-      body {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        background-size: cover;
-        background: -webkit-linear-gradient(0deg, #39b1b2, #000000 100%);
-        margin: 0;
-        padding: 0;
-      }
-      form {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-top: 150px;
-       }
-      input {
-        margin: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        border: none;
-        box-shadow: 0px 0px 5px #888;
-        color:rgba(164, 209, 207, 0.7);
-        color: black;
-      }
-      input:focus {
-        outline: none;
-        background-color: rgba(164, 209, 207, 0.7); 
-      }
-      label {
-        position: relative;
-        color:white;
-      }
-      label span {
-        position: absolute; 
-        left: 10px;
-        top: -10px;
-        padding: 0 5px;
-        background-color: rgba(0, 0, 0, 0.5); 
-        border-radius: 5px; 
-      }
-      button {
-        margin: 10px;
-        padding: 10px;
-        border-radius:5px;
-        width: 60;
-        height: 100;
-        border: none;
-        box-shadow: 0px 0px 5px #888;
-        background-color: #7f8f7f;
-        color: white;
-        cursor: pointer;
-      }
-      .button-group {
-        display: flex;
-        font-size: 1.2rem;
-        justify-content: space-between;
-        margin-top: 15px; /* Add some space between the buttons and the form inputs */
-        width: 100%;
-      }
-      button:disabled {
-        background-color: #7f8f7f;
-        cursor: not-allowed;
-      }
-      button:hover:not(:disabled) {
-        background-color:rgba(164, 209, 207, 0.7);
-      }
-      .logo-container {
-        position: absolute;
-        left: 0;
-        top: 0%;
-        width: 430px;
-        height: 100%;
-        display: flex;
-        justify-content: flex-end;
-        align-items: left;
-    }
-     .logo-image {
-        max-width: 100%;
-        height: auto;
-    }
-    @media only screen and (max-width: 768px) {
-        body {
-            flex-direction: column;
-        }
-        form {
-            flex-direction: row;
-            justify-content: space-between;
-            margin-top: 100px;
-            width: 100%;
-        }
-        .form-inputs {
-            margin-right: 50px;
-        }
-        .button-group {
-            flex-direction: column;
-        }
-        .logo-container {
-            width: 100%;
-            height: 100px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            
-        }
-        .logo-image {
-            max-width: 80%;
-            height: auto;
-          }
-          .timer {
-            font-size: 1.5rem;
-            color: white;
-            margin-top: 20px;
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    background-color: #39b1b2;
     }
 
-  }
-    </style>
-  </head>
-  <body>
-    <form>
+    #container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    }
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
+    #logo {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    }
 
-      <label for="otp">OTP code:</label>
-      <input type="text" id="otp" name="otp" required>
+    .page h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    }
 
-      <div class="button-group">
-        <button type="submit" id="send-code-btn">Send code</button>
-        <button type="submit" id="signup-btn" disabled>Sign in</button>
+    input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    font-size: 14px;
+    }
+
+    button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #39b1b2;
+    border: none;
+    border-radius: 3px;
+    font-size: 14px;
+    color: #fff;
+    cursor: pointer;
+    }
+
+    button:hover {
+    background-color: #2c9a9a;
+    }
+
+    a {
+    color: #39b1b2;
+    }
+
+    a:hover {
+    text-decoration: underline;
+    }
+  </style>
+  <title>Sign In</title>
+</head>
+<body>
+  <div id="container">
+    <div id="logo">
+        <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="Dev Hire" style="width: 200px; height: auto;">
       </div>
+    <div id="signin">
+      <h1>Sign In</h1>
+      <input type="email" id="signinEmail" placeholder="Email" />
+      <button id="signinSendOtp">Send OTP</button>
+      <div id="signinTimer"></div>
+      <input type="text" id="signinOtp" placeholder="Enter OTP" />
+      <button id="signinButton">Sign In</button>
+      <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+    </div>
+  </div>
+  <script>
+    const signinSendOtp = document.getElementById("signinSendOtp");
+    const signinTimer = document.getElementById("signinTimer");
+    const signinButton = document.getElementById("signinButton");
 
-      <div class="logo-container">
-        <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" 
-        alt="logo.png"  class="logo-image">
-      </div>
+    function sendOtp(button, timer, emailInput) {
+        button.disabled = true;
+        let timeRemaining = 120;
+        timer.innerHTML = `OTP sent! Expires in ${timeRemaining} seconds.`;
 
-      <div id="timer">02:00</div>
+        // Implement your OTP sending functionality here, using the email from emailInput.value
 
-    </form>
+        const countdown = setInterval(() => {
+            timeRemaining--;
+            timer.innerHTML = `OTP sent! Expires in ${timeRemaining} seconds.`;
 
-    <script>
-        const form = document.querySelector('form');
-        const sendCodeBtn = document.querySelector('#send-code-btn');
-        const signUpButton = document.querySelector('#signup-btn');
-        const otpInput = document.querySelector('#otp');
-        const timerElement = document.getElementById("timer");
-        
-        form.addEventListener('submit', handleSubmit);
-        signUpButton.disabled  = true;
-        otpInput.addEventListener('input', handleOtpInput);
-        
-        var timeLimit = 120;
-
-        function startTimer(duration, display) {
-  let timer = duration, minutes, seconds;
-  setInterval(function () {
-    minutes = parseInt(timer / 60, 10);
-    seconds = parseInt(timer % 60, 10);
-
-    minutes = minutes < 10 ? "0" + minutes : minutes;
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-
-    display.textContent = minutes + ":" + seconds;
-
-    if (--timer < 0) {
-      timer = duration;
+            if (timeRemaining <= 0) {
+            clearInterval(countdown);
+            button.disabled = false;
+            timer.innerHTML = "OTP expired. Click Send OTP to request a new one.";
+         }
+          }, 1000);
     }
-  }, 1000);
-}
-document.querySelector("#send-code-btn").addEventListener("click", function(event) {
-  event.preventDefault();
-  startTimer(120, timerElement);
-});
-                
-        
-        function handleOtpInput(event) {
-            // Replace "1234" with the correct OTP code sent on email
-            if (event.target.value === "1234") { 
-            signUpButton.disabled = false;
-        } 
-        else {
-            signUpButton.disabled = true;
-        }
-    }
-    function handleSubmit(event) {
-  event.preventDefault();
-  const email = document.querySelector('#email').value;
-  const otp = otpInput.value;
 
-  // Do something with the user's input
-  console.log(`User entered email: ${email}`);
-  console.log(`User entered OTP: ${otp}`);
+    signinSendOtp.addEventListener("click", () => sendOtp(signinSendOtp, signinTimer, document.getElementById("signinEmail")));
 
-  form.reset();
-  signUpButton.disabled = true; // Disable the button again after form submission
-}
-</script>
-  </body>
+    signinButton.addEventListener("click", () => verifyOtpAndSubmit(document.getElementById("signinOtp")));
+  </script>
+</body>
 </html>
