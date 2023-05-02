@@ -2,11 +2,14 @@ import openai
 import os
 from textblob import TextBlob
 import re
-from flask import Flask, request, render_template
+from flask import Flask, request, jsonify, render_template
+from reportMailscript import send_mail
+# from flask import Flask, request, render_template
 # from reportMailscript import send_mail
 
 try:
-    openai.api_key = os.environ["OPENAI_API_KEY"]
+    # openai.api_key = os.environ["OPENAI_API_KEY"]
+    openai.api_key = "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"
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
@@ -74,11 +77,11 @@ class Interview:
         self.scoreByBot = 0
         self.x_value = 0
         self.questionsAsked = 0
-        
+
         self.currentTone = 0.0;
         self.currentUnderstanding = 0.0;
         self.currentBot = 0.0
-        
+
 
         self.scoreCount_0 = 0
         self.scoreCount_1 = 0
@@ -138,7 +141,7 @@ class Interview:
         self.currentTone = 0.65 * self.currentTone
         self.currentUnderstanding = 0.65 * self.currentUnderstanding
         self.currentBot = 0.65 * self.currentBot
-        
+
         if self.questionsAsked >= 1:
             score1 = ((tone_score + 1) * 5)
             score2 = ((understanding_score + 1) * 5)
@@ -204,37 +207,55 @@ class Interview:
                 print("Something went wrong. Please try again.")
 
 
+interviews = [None] * 100
 
-# interview = Interview("Maaz")
+def get_interview_index(user_id):
+    for i in range(len(interviews)):
+        if interviews[i] is not None and interviews[i].user_id == str(user_id):
+            return i
+    return None
 
-# def process_begin(data):
-#     returnAns = interview.run(data)
-#     return returnAns
+app =  Flask(__name__,template_folder="templates")
 
-# app =  Flask(__name__,template_folder="templates")
+@app.route("/")
+def aut():
+    return render_template("InterviewBot.html")
 
-# @app.route("/")
-# def aut():
-#     return render_template("InterviewBot.html")
+interview_index = int(-1)
+@app.route("/starter",methods=["POST","GET"])
+def runner():
+    global interview_index
+    data = request.get_json()
+    user_id = str(data["user_id"])
+    print("user id: ", user_id)
+    interview_index = get_interview_index(user_id)
+    if interview_index is None:
+        for i in range(len(interviews)):
+            if interviews[i] is None:
+                interview_temp = Interview("Maaz", user_id)
+                interviews[i] = interview_temp
+                interview_index = int(i)
+                break
+    result = interviews[int(interview_index)].run(str(data["prompt"]))
+    print("index: ", interview_index, result)
+    return str(result[0])
+@app.route("/receive-data",methods=["POST","GET"])
+def receive_data():
+    data = request.get_json()
+    print(interview_index)
+    result = interviews[interview_index].run(str(data))
+    scores = result[2] # Scores: [Tone, Understanding, Bot]
+    flag = 0
+    if result[1] == 0:
+        scores = scores
+        flag = 1
+        report = interviews[interview_index].get_report_data()
+        send_mail("maazimam03@gmail.com", scores=scores, report=report)
+        interviews[interview_index] = None
+        response = {"ans":"The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again.","score":scores, "flag":flag}
+        return response
+    response = {"ans":result[0],"score":scores, "flag":flag}
+    return response
 
-# @app.route("/starter",methods=["POST","GET"])
-# def runner():
-#     data = request.get_json()
-#     ans = interview.run(str(data))
-#     return str(ans[0])
-
-# @app.route("/receive-data",methods=["POST","GET"])
-# def receive_data():
-#     data = request.get_json()
-#     result = process_begin(str(data))
-#     scores = result[2] # Scores: [Tone, Understanding, Bot]
-#     if result[1] == 0:
-#         scores = scores
-#         report = interview.get_report_data()
-#         send_mail("maazimam03@gmail.com", scores=scores, report=report)
-#         exit()
-#     response = {"ans":result[0],"score":scores}
-#     return response
-
-# if __name__ == "__main__":
-#     app.run()
+if __name__ == "__main__":
+    app.run()
