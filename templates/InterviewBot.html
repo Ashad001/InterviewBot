@@ -700,6 +700,11 @@
                     .then(data => {
                         var Botdata = data.ans;
                         var scoresList = data.score;
+                        var flag = data.flag;
+                        if(flag===1)
+                        {
+                            disableInput();
+                        }
                         createEl('bot', Botdata);
                         adjust_Scores(scoresList);
                         text_area.scrollTop = text_area.scrollHeight;
@@ -757,7 +762,7 @@
                 div1.appendChild(div3);
                 text_area.appendChild(div1);
                 console.log(data);
-                // iterateWithDelay(data,p1,20);     
+                // iterateWithDelay(data,p1,20);
             }
         }
 
@@ -776,7 +781,11 @@
         {
             const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
             let result = '';
-            result += chars[Math.floor(Math.random() * chars.length)];
+            for(let i=0;i<16;i++)
+            {
+                result += chars[Math.floor(Math.random() * chars.length)];
+            }
+            console.log(result)
             return result;
         }
 
@@ -833,6 +842,19 @@
             document.getElementById('tone-bar2').style.width = tone_score + '%';
             document.getElementById('und-bar2').style.width = und_score + '%';
             document.getElementById('ai-bar2').style.width = AI_score + '%';
+        }
+
+        function disableInput()
+        {
+            input.style.display = 'none';
+            text.disabled = true;
+            send_arrow.onclick = 'null';
+            send_arrow.style.cursor = 'default';
+            voice_arrow.style.opacity = 0.5;
+            voice_arrow.onclick = 'null';
+            voice_arrow.style.cursor = 'default';
+            listening = false;
+            voice_arrow.classList.remove('fa-beat');
         }
     </script>
 </body>
