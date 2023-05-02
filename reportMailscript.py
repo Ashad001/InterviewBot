@@ -9,10 +9,10 @@ def send_mail(recievermail, scores, report):
     port = 465  # For SSL
     receiver_email = recievermail
     # read mail from file
-    with open("readmail.txt") as f:
+    with open("/home/DevHire23/mysite/readmail.txt") as f:
         sender_email = f.read()
     # password read from file
-    with open("password.txt") as f:
+    with open("/home/DevHire23/mysite/password.txt") as f:
         password = f.read()
     
     
@@ -35,64 +35,92 @@ def send_mail(recievermail, scores, report):
     # HTML content
     html = f"""
     <html>
-        <head>
-            <style>
-                .content {{
-                    background: -webkit-linear-gradient(0deg, #39b1b2, #000000 100%);
-                    padding: 2rem;
-                }}
-                .content p {{
-                    margin-bottom: 1rem;
-                }}
-                .scores {{
-                    display: flex;
-                    flex-direction: row;
-                    justify-content: space-between;
-                    font-size: 1.1em;
-                    margin-top: 1.5rem;
-                    margin-bottom: 2rem;
-                }}
-                .score {{
-                    text-align: center;
-                }}
-                .report {{
-                    font-size: 1.2em;
-                    line-height: 1.6;
-                    margin-bottom: 2rem;
-                }}
-                .logo img {{
-                    height: 150px;
-                    width: auto;
-                    padding-top: 1rem;
-                }}
-            </style>
-        </head>
-        <body>
-            <div class="content">
-                <p style="font-size: 1.5em;">Dear Participant,</p>
-                <p style="font-size: 1.3em;">Congratulations! You have completed your interview through DevHire.</p>
-                <div class="scores">
-                    <div class="score">
-                        <p>Speech</p>
-                        <p>{scores[0]}/10.0</p>
-                    </div>
-                    <div class="score">
-                        <p>Understanding</p>
-                        <p>{scores[1]}/10.0</p>
-                    </div>
-                    <div class="score">
-                        <p>AI Analysis</p>
-                        <p>{scores[2]}/10.0</p>
-                    </div>
-                </div>
-                <p style="font-size: 1.2em;">Detailed Report of Your Interview:</p>
-                <div class="report">{report}</div>
+  <head>
+    <title>Report</title>
+    <style>
+      .contain {{
+        width: 80%;
+        margin: 0 auto;
+        text-align: right;
+        text-justify: inter-word; /* optional */
+      }}
+      .container {{
+        width: 80%;
+        margin: 0 auto;
+        text-align: justify;
+        text-justify: inter-word; /* optional */
+      }}
+      .content{{
+        color:white;
+      }}
+      .scores {{
+        font-size: 1.1em;
+        margin-top: 1.5rem;
+        margin-bottom: 2rem;
+        justify-content: space-evenly;
+        flex-direction: column;
+      }}
+      .score {{
+        text-align: center;
+      }}
+      .report {{
+        text-align: left;
+        font-size: 1.2em;
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }}
+      .logo img {{
+        height: 150px;
+        width: auto;
+        padding-top: 1rem;
+      }}
+    </style>
+  </head>
+  <body style="color:white;">
+    <div class="content">
+    <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
+      <div style="margin:50px auto;width:80%;padding:20px 0">
+        <div style="border-bottom:5px solid #eee">
+        <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="logo.png"  style="display:float; margin:auto;" height="150" width=auto>
+        </div>
+        <div style="color:white; text-align:center; background: -webkit-linear-gradient(0deg,#39b1b2 ,#000000 100%);">
+          
+          <p style="font-size:15px">
+            <b>Dear Participant,</b>
+          </p>
+          <p>Congratulations! You have completed your interview through DevHire.</p>
+          <div class="scores">
+            <div class="score">
+              <p>Score By Tone</p>
+              <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">{scores[0]}/10.0</h2>
             </div>
-            <div class="logo">
-                <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="logo.png">
+            <div class="score">
+              <p>Score by Question Understanding</p>
+              <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">{scores[1]}/10.0</h2>
             </div>
-        </body>
-    </html>
+            <div class="score">
+              <p>Score By Bot</p>
+              <h2 style="background: #00466a;margin: 0 auto;width: max-content;padding: 0 10px;color: #fff;border-radius: 4px;">{scores[2]}/10.0</h2>
+            </div>
+          </div>
+          <h3 class="container">Detailed Report of Your Interview:</h3>
+          <div class="container">{report}</div>
+          <p class="contain" style="font-size:15px;">
+            Regards,<br />Team DevHire
+          </p>
+        </div>
+        <hr style="border:none;border-top:5px solid #eee" />
+        <div style="float:left;padding:8px 0;color:#aaa;font-size:0.8em;line-height:1;font-weight:300">
+          <p>Contact Us</p>
+          <p>
+            <a href="mailto:devhirecontact@gmail.com">info@devday.com</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+    </div>
+  </body>
+</html>
     """
 
 
@@ -117,6 +145,3 @@ def send_mail(recievermail, scores, report):
         print(f"Something went wrong while sending the email: {e}")
     finally:
         server.quit()
-
-            
-            
