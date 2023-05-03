@@ -38,10 +38,9 @@
             justify-content: space-between;
             padding: 30px;
             font-weight: 200;
-            overflow: auto;
-            height: max-content;
+            overflow: overlay;
+            height: 44rem;
             border: 1px solid lightgrey;
-            margin: 10px auto;
         }
 
         .score-name {
@@ -94,7 +93,6 @@
         .Primary-Section {
             height: 100vh;
             padding: 50px 10px;
-            overflow: auto;
         }
 
         .InterviewBotDiv {
@@ -188,14 +186,29 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #037377;
         }
+        .Score::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .Score::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px white;
+            border-radius: 2px;
+        }
+
+        .Score::-webkit-scrollbar-thumb {
+            background: lightgray;
+            border-radius: 5px;
+        }
+
+        .Score::-webkit-scrollbar-thumb:hover {
+            background: white;
+        }
 
         .InputFieldDiv {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 4rem;
-            margin: 20px 0 0px 20px;
-            position: fixed;
         }
 
         #InputField {
@@ -402,6 +415,11 @@
                 visibility: hidden;
             }
         }
+
+        #textArea {
+            height: 95%;
+            overflow: auto;
+        }
     </style>
 </head>
 
@@ -482,7 +500,8 @@
                                 10.0
                             </div>
                             <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="und-bar2"></div>
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="und-bar2">
+                                </div>
                             </div>
                         </div>
                         <div class="score-group">
@@ -513,7 +532,7 @@
             </div>
         </div>
         <div class="col-12 Primary-Section col-lg-9 container">
-            <div class="col-12 container" style="height: 80vh; overflow: auto;" id="textArea">
+            <div class="col-12 container" id="textArea">
             </div>
             <div class="col-12 container" style="height: 80vh; overflow: auto;" id="rulesarea">
                 <div class="row primary-info">
@@ -560,7 +579,7 @@
                     </div>
                 </div>
             </div>
-            <div class="InputFieldDiv col-8 container" id="input">
+            <div class="InputFieldDiv col-12 container" id="input">
                 <input type="text" class="col-8 col-md-9" id="InputField" placeholder="Type here or use voice control"
                     onkeypress="check(event)" onkeyup="active(this)">
                 <button class="voiceSend"><i class="fa-solid fa-microphone fa-beat" id="voiceArrow"
@@ -701,8 +720,7 @@
                         var Botdata = data.ans;
                         var scoresList = data.score;
                         var flag = data.flag;
-                        if(flag===1)
-                        {
+                        if (flag === 1) {
                             disableInput();
                         }
                         createEl('bot', Botdata);
@@ -777,12 +795,10 @@
             }
             setTimeout(loop, delay);
         }
-        function generateUserId()
-        {
+        function generateUserId() {
             const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
             let result = '';
-            for(let i=0;i<16;i++)
-            {
+            for (let i = 0; i < 16; i++) {
                 result += chars[Math.floor(Math.random() * chars.length)];
             }
             console.log(result)
@@ -807,7 +823,7 @@
 
             fetch("/starter", {
                 method: "POST",
-                body: JSON.stringify({"user_id": userID, "prompt": prompt}),
+                body: JSON.stringify({ "user_id": userID, "prompt": prompt }),
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -844,8 +860,7 @@
             document.getElementById('ai-bar2').style.width = AI_score + '%';
         }
 
-        function disableInput()
-        {
+        function disableInput() {
             input.style.display = 'none';
             text.disabled = true;
             send_arrow.onclick = 'null';
