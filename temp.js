@@ -1,10 +1,9 @@
-    // <!-- <script src="InterviewBot.js"></script> -->
-    <script>
+<script>
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new window.SpeechRecognition();
         recognition.interimResults = false;
         let listening = false;
-
+        let stoppeer = document.getElementById('stoppage');
         let text = document.getElementById('InputField');
         let send_arrow = document.getElementById('textArrow');
         let text_area = document.getElementById('textArea');
@@ -22,6 +21,9 @@
         // stBD.className += 'blur';
         text.disabled = true;
 
+        stoppeer.style.cursor = 'default';
+        stoppeer.style.opacity = 0.5;
+        stoppeer.onclick = 'null';
         send_arrow.style.opacity = 0.5;
         send_arrow.onclick = 'null';
         send_arrow.style.cursor = 'default';
@@ -29,6 +31,29 @@
         voice_arrow.style.opacity = 0.5;
         voice_arrow.onclick = 'null';
         voice_arrow.style.cursor = 'default';
+
+        // var sessionTimeout = 30000;
+        // var sessionTimeoutId;
+        // function resetSessionTimeout() {
+        //   clearTimeout(sessionTimeoutId);
+        //   sessionTimeoutId = setTimeout(endSession, sessionTimeout);
+        // }
+
+        // document.addEventListener('mousemove', resetSessionTimeout);
+        // document.addEventListener('keypress', resetSessionTimeout);
+        // window.addEventListener('beforeunload', endSession);
+
+        // function endSession() {
+        //   fetch('/end-session')
+        //     .then(response => response.text())
+        //     .then(data => {
+        //         disableInput();
+        //         createEl('bot', data);
+        //         text_area.scrollTop = text_area.scrollHeight;
+        //     })
+        //     .catch(error => console.error(error));
+        // }
+
 
 
         function voice() {
@@ -81,10 +106,10 @@
             if (event.key == "Enter" && !event.shiftKey) {
                 event.preventDefault();
                 send();
-                text.disabled = false;
-                voice_arrow.style.opacity = 1;
-                voice_arrow.style.cursor = 'pointer';
-                voice_arrow.addEventListener("click", voice);
+                // text.disabled = false;
+                // voice_arrow.style.opacity = 1;
+                // voice_arrow.style.cursor = 'pointer';
+                // voice_arrow.addEventListener("click", voice);
             }
         }
 
@@ -107,7 +132,7 @@
             send_arrow.onclick = 'null';
             send_arrow.style.cursor = 'default';
             voice_arrow.style.opacity = 0.5;
-            voice_arrow.onclick = 'null';
+            voice_arrow.removeEventListener("click", voice);
             voice_arrow.style.cursor = 'default';
             listening = false;
             voice_arrow.classList.remove('fa-beat');
@@ -128,7 +153,8 @@
                         var Botdata = data.ans;
                         var scoresList = data.score;
                         var flag = data.flag;
-                        if (flag === 1) {
+                        if(parseInt(flag)==1)
+                        {
                             disableInput();
                         }
                         createEl('bot', Botdata);
@@ -203,10 +229,12 @@
             }
             setTimeout(loop, delay);
         }
-        function generateUserId() {
+        function generateUserId()
+        {
             const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
             let result = '';
-            for (let i = 0; i < 16; i++) {
+            for(let i=0;i<16;i++)
+            {
                 result += chars[Math.floor(Math.random() * chars.length)];
             }
             console.log(result)
@@ -223,7 +251,7 @@
             start.onclick = 'null';
             voice_arrow.style.opacity = 1;
             voice_arrow.style.cursor = 'pointer';
-            voice_arrow.addEventListener("click", voice);
+            voice_arrow.addEventListener("onclick", voice);
 
             const userID = generateUserId();
             const prompt = "Please start the interview";
@@ -231,14 +259,14 @@
 
             fetch("/starter", {
                 method: "POST",
-                body: JSON.stringify({ "user_id": userID, "prompt": prompt }),
+                body: JSON.stringify({"user_id": userID, "prompt": prompt}),
                 headers: {
                     "Content-Type": "application/json"
                 },
             })
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(data => {
-                    createEl('bot', data);
+                    createEl('bot', data.result);
                     text_area.scrollTop = text_area.scrollHeight;
                 })
                 .catch(error => console.error(error));
@@ -268,15 +296,37 @@
             document.getElementById('ai-bar2').style.width = AI_score + '%';
         }
 
-        function disableInput() {
+        function disableInput()
+        {
             input.style.display = 'none';
             text.disabled = true;
-            send_arrow.onclick = 'null';
+            send_arrow.removeEventListener("click", send);
             send_arrow.style.cursor = 'default';
             voice_arrow.style.opacity = 0.5;
-            voice_arrow.onclick = 'null';
+            voice_arrow.removeEventListener("click", voice);
             voice_arrow.style.cursor = 'default';
             listening = false;
             voice_arrow.classList.remove('fa-beat');
+            stoppeer.removeEventListener("click", stopper);
+            stoppeer.style.cursor = 'default';
+            stoppeer.style.opacity = 0.5;
+        }
+
+        function stopper()
+        {
+            console.log("STOP INTERVIEW CALLED");
+            // fetch("/stopper_yay", {
+            //     method: "POST",
+            //     body: JSON.stringify("Stop the Interview"),
+            //     headers: {
+            //         "Content-Type": "application/json"
+            //     },
+            // })
+            //     .then(response => response.json())
+            //     .then(data => {
+            //         createEl('bot', data.result);
+            //         text_area.scrollTop = text_area.scrollHeight;
+            //     })
+            //     .catch(error => console.error(error));
         }
     </script>
