@@ -7,17 +7,18 @@ import time
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from flask import Flask, request, render_template
 
 gc = gspread.service_account(filename='sheetAuth.json') #giving sheet access
 wks = gc.open("devhire_Database").sheet1
 
-def validate_email(email):
-    pattern = r'^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$'
-    return re.match(pattern, email)
+# def validate_email(email):
+#     pattern = r'^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$'
+#     return re.match(pattern, email)
 
-def validate_name(name):
-    pattern = r'^[a-zA-Z]+$'
-    return re.match(pattern, name)
+# def validate_name(name):
+#     pattern = r'^[a-zA-Z]+$'
+#     return re.match(pattern, name)
 
 def gen_email_otp():
     otp = str(random.randint(100000,999999))
@@ -34,7 +35,7 @@ def send_otp_email(first_name,email,verification_code):
     mail_content['From'] = devhire_email
     mail_content['To'] = email
     text = f"Your Verification Code For DevHire Signup Is : {verification_code}"
-    #HTML content for email template
+    # HTML content for email template
     html = f"""
     <!DOCTYPE html>
     <html>
@@ -75,73 +76,62 @@ def send_otp_email(first_name,email,verification_code):
         server.login(devhire_email,devhire_email_password)
         server.send_message(mail_content)
     
-def verify_user():
+def genOTP(first_name,last_name,email):
+    existing_emails = wks.col_values(3) #to check for a returning user and keeping new users unique
+    if email in existing_emails:
+        return -724 
+    else:
         verification_code = gen_email_otp()
         send_otp_email(first_name,email,verification_code)
-            
-        start_time = time.time()
-        while time.time() - start_time < 120:
-            entered_otp = input("Enter the code sent to your email (within 2 minutes) : ")
-            if entered_otp != verification_code:
-                print("Verification Code Invalid or Expired, try again and if code not recieved check your mail SPAM")
-                continue
-            else:
-                break
+        return verification_code
         
 
     
-print("\nWelcome To DevHire User Account")
-# Prompt for new user,returning user or exit
-while True:
-    choice = input("\n Enter '!' to exit \n Enter 'n' to enter a new user\n Enter 'r' if you already have an account\n ")
-    if choice == "!":
-        break
-    
-    if choice == "r" or choice == "R":
-        email = input("Enter your registered email: ")
-        if not validate_email(email):
-                print("Invalid email format. Please try again.")
-                continue
-        cell = wks.find(email)
+def find_email(email):
+    cell = wks.find(email)
 
-        if cell is None:
-            print("\nThis Email is not registered with DevHire.\n")
-        else:
-            row_num = cell.row
-            first_name = wks.cell(row_num,1).value
-            Tone = wks.cell(row_num,4).value
-            Understanding = wks.cell(row_num,5).value
-            Ai_Analysis = wks.cell(row_num,6).value
-            verify_user()
-            print(f"Welcome back {first_name}, You have signed in successfully\nHere are your scores from your last session\nTone Score: {Tone}\nUnderstanding Score: {Understanding}\nAi Analysis: {Ai_Analysis}")
-        break
+    if cell is None:
+        print("\nThis Email is not registered with DevHire.\n")
+    else:
+        row_num = cell.row
+        first_name = wks.cell(row_num,1).value
+        Tone = wks.cell(row_num,4).value
+        Understanding = wks.cell(row_num,5).value
+        Ai_Analysis = wks.cell(row_num,6).value
 
-    if choice == "n" or choice == "N":
-        while True:
-            first_name = input("Enter your first name: ")
-            last_name = input("Enter your last name: ")
-            email = input("Enter your email: ")
 
-            if not (first_name.isalpha() and last_name.isalpha()):
-                print("Invalid name format. Please try again.")
-                continue
 
-            if not validate_email(email):
-                print("Invalid email format. Please try again.")
-                continue
-        
-            existing_emails = wks.col_values(3) #to check for a returning user and keeping new users unique
-            #ashad this is the method you can use for retrieving data as 3rd coloumn is hardcoded for emails
-            if email in existing_emails:
-                print("This Email is already registered. Please try again with a different email or Sign in as a returning user.")
-                continue
-            verify_user()
-            break
-    
+app = Flask(__name__,template_folder="templates")
+
+@app.route("/")
+def aut():
+    return render_template("signup2.html")
+
+@app.route("/getOTP",methods=["POST","GET"])
+def receive_data():
+    data = request.get_json()
+    data = dict(data)
+    print(data['first'],data['last'],data['email'])
+    ver = genOTP(data['first'],data['last'],data['email'])
+    return ver
+
+@app.route("/getOTP2",methods=["POST","GET"])
+def otp2():
+    data = request.get_json()
+    print(data)
+    ver = find_email(data)
+    return ver
+
+@app.route("/enterinsheet",methods=["POST","GET"])
+def receive_verified_data():
+    data = request.get_json()
+    data = dict(data)
+    first_name,last_name,email = data['first'],data['last'],data['email']
+    ver = (data['first'],data['last'],data['email'])
     row = [first_name, last_name, email] #will insert in this order 
-    wks.insert_row(row, index=2) #is hardcoded to insert at 2nd row always pushing others one row down
-    #first row has titles
-    print("Signup Successful")
+    wks.insert_row(row, index=2)
+    return "MAAZ"
+    
 
-
-
+if __name__ == "__main__":
+    app.run()
