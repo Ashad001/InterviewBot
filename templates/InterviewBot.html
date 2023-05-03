@@ -186,6 +186,7 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #037377;
         }
+
         .Score::-webkit-scrollbar {
             width: 3px;
         }
@@ -219,6 +220,35 @@
             outline: none;
         }
 
+        .stopButton01 {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            border: 1px solid white;
+            font-size: 25px;
+            background-color: #10a2a4;
+            color: white;
+            margin: 0px 15px;
+            position: relative;    
+        }
+        .stopButton01Text
+        {
+            font-size: 14px;
+            border: 2px solid white;
+            border-radius: 6px;
+            padding: 6px 8px;
+            width: 9rem;
+            margin: -105px 0 0 -51px;
+            position: absolute;
+            background-color: #10a2a4;
+            color: white;
+            visibility: hidden;
+        }
+        .stopButton01:hover .stopButton01Text
+        {
+            position: absolute;
+            visibility: visible;
+        }
         .textSend {
             border-radius: 50%;
             width: 50px;
@@ -580,6 +610,10 @@
                 </div>
             </div>
             <div class="InputFieldDiv col-12 container" id="input">
+                <button class="stopButton01">
+                    <i class="bi bi-stop-circle-fill"></i>
+                    <div class="stopButton01Text">Click to stop the interview</div>
+                </button>
                 <input type="text" class="col-8 col-md-9" id="InputField" placeholder="Type here or use voice control"
                     onkeypress="check(event)" onkeyup="active(this)">
                 <button class="voiceSend"><i class="fa-solid fa-microphone fa-beat" id="voiceArrow"
