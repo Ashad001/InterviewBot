@@ -3,7 +3,7 @@ import os
 from textblob import TextBlob
 import re
 from flask import Flask, request, jsonify, render_template
-from flask import render_template,session,redirect, url_for
+from flask import session,redirect, url_for
 import secrets
 from reportMailscript import send_mail
 from flask_cors import CORS
@@ -13,7 +13,8 @@ from flask_cors import CORS
 # from reportMailscript import send_mail
 
 try:
-    openai.api_key = os.environ["OPENAI_API_KEY"]
+    # openai.api_key = os.environ["OPENAI_API_KEY"]
+    openai.api_key = "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"
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
@@ -227,13 +228,18 @@ app.secret_key = os.urandom(24)
 def aut():
     return render_template("InterviewBot.html")
 
+kkkk = 0
+# @app.route("/ajeeb")
+# def abc():
+#     return str(kkkk)
+
 @app.route("/starter",methods=["POST","GET"])
 def runner():
+    global kkkk
     user_id = str(request.json["user_id"])
-    result = None
     print("user id: ", user_id)
     interview_index = session.get('interview_index', None)
-    # interview_index = get_interview_index(user_id)
+    kkkk = interview_index
     if interview_index is None:
         for i in range(len(interviews)):
             if interviews[i] is None:
@@ -241,23 +247,20 @@ def runner():
                 interviews[i] = interview_temp
                 interview_index = int(i)
                 session['interview_index'] = interview_index # Store the interview index in the session
-                result = interviews[int(interview_index)].run(str(request.json["prompt"]))
                 break
-    if result is not None:
-        response = jsonify({"result":str(result[0])})
-        response.headers.add('Access-Control-Allow-Origin', 'https://devday23.tech')
-        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
-        response.headers.add('Access-Control-Allow-Methods', 'POST')
 
-        return response
-    else:
-        return jsonify({"result":"Hello"})
+    result = interviews[int(interview_index)].run(str(request.json["prompt"]))
+    response = jsonify({"result":str(result[0])})
+    response.headers.add('Access-Control-Allow-Origin', 'https://devday23.tech')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'POST')
+    return response
 
 @app.route("/receive-data",methods=["POST","GET"])
 def receive_data():
     interview_index = session.get('interview_index', None) # Get the interview index from the session
     data = request.json
-    result = interviews[interview_index].run(str(data))
+    result = interviews[int(interview_index)].run(str(data))
     scores = result[2] # Scores: [Tone, Understanding, Bot]
     flag = 0
     if result[1] == 0:
@@ -271,6 +274,28 @@ def receive_data():
         return response
     response = {"ans":result[0],"score":scores, "flag":flag}
     return jsonify(response)
+
+@app.route('/end-session')
+def end_session():
+  interview_index = session.get('interview_index', None)
+  if interview_index is not None:
+    interviews[interview_index] = None
+    session.pop('interview_index', None)
+  return "Session ended due to inactivity please restart"
+
+@app.route('/stopper_yay', methods=["POST", "GET"])
+def stopper1():
+    data = request.json
+    interview_index = session.get('interview_index', None)
+    result = interviews[int(interview_index)].run(str(data))
+    scores = result[2]
+    flag = 1
+    report = interviews[int(interview_index)].get_report_data()
+    send_mail("ashad001sp@gmail.com", scores=scores, report=report)
+    response = jsonify({"ans":"The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again.","score":scores, "flag":flag})
+    interviews[int(interview_index)] = None
+    session.pop('interview_index', None)
+    return response
 
 if __name__ == "__main__":
     app.run()
