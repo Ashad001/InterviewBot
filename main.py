@@ -3,7 +3,12 @@ import os
 from textblob import TextBlob
 import re
 from flask import Flask, request, jsonify, render_template
+from flask import render_template,session,redirect, url_for
+import secrets
 from reportMailscript import send_mail
+from flask_cors import CORS
+
+
 # from flask import Flask, request, render_template
 # from reportMailscript import send_mail
 
@@ -215,46 +220,56 @@ def get_interview_index(user_id):
     return None
 
 app =  Flask(__name__,template_folder="templates")
+cors = CORS(app, resources={r"/*": {"origins":"*"}})
+app.secret_key = os.urandom(24)
 
 @app.route("/")
 def aut():
     return render_template("InterviewBot.html")
 
-interview_index = int(-1)
 @app.route("/starter",methods=["POST","GET"])
 def runner():
-    global interview_index
-    data = request.get_json()
-    user_id = str(data["user_id"])
+    user_id = str(request.json["user_id"])
+    result = None
     print("user id: ", user_id)
-    interview_index = get_interview_index(user_id)
+    interview_index = session.get('interview_index', None)
     if interview_index is None:
         for i in range(len(interviews)):
             if interviews[i] is None:
                 interview_temp = Interview("Maaz", user_id)
                 interviews[i] = interview_temp
                 interview_index = int(i)
+                session['interview_index'] = interview_index # Store the interview index in the session
+                result = interviews[int(interview_index)].run(str(request.json["prompt"]))
                 break
-    result = interviews[int(interview_index)].run(str(data["prompt"]))
-    print("index: ", interview_index, result)
-    return str(result[0])
+    if result is not None:
+        response = jsonify({"result":str(result[0])})
+        response.headers.add('Access-Control-Allow-Origin', 'https://devday23.tech')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+        response.headers.add('Access-Control-Allow-Methods', 'POST')
+
+        return response
+    else:
+        return jsonify({"result":"Hello"})
+
 @app.route("/receive-data",methods=["POST","GET"])
 def receive_data():
-    data = request.get_json()
-    print(interview_index)
+    interview_index = session.get('interview_index', None) # Get the interview index from the session
+    data = request.json
     result = interviews[interview_index].run(str(data))
     scores = result[2] # Scores: [Tone, Understanding, Bot]
     flag = 0
     if result[1] == 0:
+        flag=1
         scores = scores
-        flag = 1
         report = interviews[interview_index].get_report_data()
-        send_mail("maazimam03@gmail.com", scores=scores, report=report)
+        send_mail("ashad001sp@gmail.com", scores=scores, report=report)
+        response = jsonify({"ans":"The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again.","score":scores, "flag":flag})
         interviews[interview_index] = None
-        response = {"ans":"The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again.","score":scores, "flag":flag}
+        session.pop('interview_index', None) # Remove the interview index from the session
         return response
     response = {"ans":result[0],"score":scores, "flag":flag}
-    return response
+    return jsonify(response)
 
 if __name__ == "__main__":
     app.run()
