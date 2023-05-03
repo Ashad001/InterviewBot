@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
     body {
     font-family: Arial, sans-serif;
     background-color: #39b1b2;
@@ -63,24 +63,26 @@
     text-decoration: underline;
     }
   </style>
-  <title>Sign In</title>
-</head>
-<body>
-  <div id="container">
-    <div id="logo">
-        <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="Dev Hire" style="width: 200px; height: auto;">
+    <title>Sign In</title>
+  </head>
+  <body>
+    <div id="container">
+      <div id="logo">
+        <img
+          src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560"
+          alt="Dev Hire" style="width: 200px; height: auto;">
       </div>
-    <div id="signin">
-      <h1>Sign In</h1>
-      <input type="email" id="signinEmail" placeholder="Email" />
-      <button id="signinSendOtp">Send OTP</button>
-      <div id="signinTimer"></div>
-      <input type="text" id="signinOtp" placeholder="Enter OTP" />
-      <button id="signinButton">Sign In</button>
-      <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+      <div id="signin">
+        <h1>Sign In</h1>
+        <input type="email" id="signinEmail" placeholder="Email" />
+        <button id="signinSendOtp">Send OTP</button>
+        <div id="signinTimer"></div>
+        <input type="text" id="signinOtp" placeholder="Enter OTP" />
+        <button id="signinButton">Sign In</button>
+        <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+      </div>
     </div>
-  </div>
-  <script>
+    <script>
     const signinSendOtp = document.getElementById("signinSendOtp");
     const signinTimer = document.getElementById("signinTimer");
     const signinButton = document.getElementById("signinButton");
@@ -108,5 +110,5 @@
 
     signinButton.addEventListener("click", () => verifyOtpAndSubmit(document.getElementById("signinOtp")));
   </script>
-</body>
+  </body>
 </html>

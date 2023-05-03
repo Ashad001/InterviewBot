@@ -748,7 +748,6 @@
                 createEl('user', "");
                 active(text);
                 text_area.scrollTop = text_area.scrollHeight;
-
                 fetch("/receive-data", {
                     method: "POST",
                     body: JSON.stringify(text.value),
@@ -814,7 +813,7 @@
 
                 var p1 = document.createElement('p');
                 p1.className += 'fs-6';
-                p1.innerText = data;
+                p1.innerText = data.result;
                 div3.appendChild(p1);
 
                 div1.appendChild(div2);
@@ -864,12 +863,12 @@
 
             fetch("/starter", {
                 method: "POST",
-                body: JSON.stringify({ "user_id": userID, "prompt": prompt }),
+                body: JSON.stringify({"user_id": userID, "prompt": prompt }),
                 headers: {
                     "Content-Type": "application/json"
                 },
             })
-                .then(response => response.text())
+                .then(response => response.json())
                 .then(data => {
                     createEl('bot', data);
                     text_area.scrollTop = text_area.scrollHeight;

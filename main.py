@@ -233,6 +233,7 @@ def runner():
     result = None
     print("user id: ", user_id)
     interview_index = session.get('interview_index', None)
+    # interview_index = get_interview_index(user_id)
     if interview_index is None:
         for i in range(len(interviews)):
             if interviews[i] is None:
