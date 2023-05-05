@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>DevHire - Email Already Registered</title>
+    <style>
+      @font-face {
+        font-family: 'Product Sans';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format('woff2');
+      }
+      body {
+        font-family: 'Product Sans', Arial, sans-serif;
+        background-color: #000;
+      }
+      #container {
+        max-width: 35%;
+        margin: 5% auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 10px solid #39b1b2;
+        border-radius: 10px;
+      }
+      #logo {
+        text-align: center;
+        margin-top: -20px;
+        font-size: 24px;
+      }
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        margin-top: -20px;
+        font-size: 300%;
+      }
+      button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        background-color: #39b1b2;
+        border: none;
+        border-radius: 3px;
+        font-size: 14px;
+        color: #fff;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #2c9a9a;
+      }
+      a {
+        color: #39b1b2;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+        <div id="logo">
+            <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81q2OP_acUxP3syqtJRIJSjmNHE94df43MFmj4-kw8Lp1bMIFCM63XCbnpEFMX4kb38Du_ckZt6q_5-fNL_yp-CizKqz=s2560" alt="Dev Hire" style="width: 40%; height: auto;">
+        </div>
+      <h1>Email Not Registered</h1>
+      <p>This email is not registered with DevHire. Either Sign in with a registered email or Sign in instead.</p>
+      <button onclick="window.location.href='/signup'">Sign Up</button>
+      <button onclick="window.location.href='/signup'">Sign In</button>
+    </div>
+  </body>
+</html>
