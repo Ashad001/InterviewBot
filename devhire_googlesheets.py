@@ -7,7 +7,7 @@ import time
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from flask import Flask, request, render_template
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 
 gc = gspread.service_account(filename='sheetAuth.json') #giving sheet access
 wks = gc.open("devhire_Database").sheet1
@@ -79,7 +79,8 @@ def send_otp_email(first_name,email,verification_code):
 def genOTP(first_name,last_name,email):
     existing_emails = wks.col_values(3) #to check for a returning user and keeping new users unique
     if email in existing_emails:
-        return -724 
+        return "742"
+        # redirect(url_for('signuperror'))
     else:
         verification_code = gen_email_otp()
         send_otp_email(first_name,email,verification_code)
@@ -91,13 +92,18 @@ def find_email(email):
     cell = wks.find(email)
 
     if cell is None:
-        print("\nThis Email is not registered with DevHire.\n")
+        return "742"
+
     else:
+        verification_code = gen_email_otp()
         row_num = cell.row
         first_name = wks.cell(row_num,1).value
         Tone = wks.cell(row_num,4).value
         Understanding = wks.cell(row_num,5).value
         Ai_Analysis = wks.cell(row_num,6).value
+        send_otp_email(first_name,email,verification_code)
+        #print(Tone,Understanding,Ai_Analysis,first_name)
+        return verification_code
 
 
 
@@ -107,19 +113,34 @@ app = Flask(__name__,template_folder="templates")
 def aut():
     return render_template("signup2.html")
 
+@app.route("/signup")
+def aut5():
+    return render_template("signup2.html")
+
+@app.route("/signin")
+def aut1():
+    return render_template("signin2.html")
+
+@app.route("/signinerror")
+def aut2():
+ return render_template("signinerror.html")
+
+@app.route("/signuperror")
+def aut3():
+ return render_template("signuperror.html")
+
 @app.route("/getOTP",methods=["POST","GET"])
 def receive_data():
     data = request.get_json()
     data = dict(data)
-    print(data['first'],data['last'],data['email'])
     ver = genOTP(data['first'],data['last'],data['email'])
     return ver
 
-@app.route("/getOTP2",methods=["POST","GET"])
-def otp2():
+@app.route("/sendOTP",methods=["POST","GET"])
+def receive2_data():
     data = request.get_json()
-    print(data)
-    ver = find_email(data)
+    data = dict(data)
+    ver = find_email(data['email'])
     return ver
 
 @app.route("/enterinsheet",methods=["POST","GET"])
@@ -127,11 +148,18 @@ def receive_verified_data():
     data = request.get_json()
     data = dict(data)
     first_name,last_name,email = data['first'],data['last'],data['email']
-    ver = (data['first'],data['last'],data['email'])
+    ver = jsonify({"first":first_name,"last":last_name,"email":email})
     row = [first_name, last_name, email] #will insert in this order 
     wks.insert_row(row, index=2)
-    return "MAAZ"
-    
+    return ver
+
+@app.route('/get_values')
+def get_values():
+    data = request.get_json()
+    data = dict(data)
+    values = ([data['first_name'],data['Tone'],data['Understanding'],data['Ai_Analysis']])
+    return jsonify(values)    
+
 
 if __name__ == "__main__":
     app.run()
