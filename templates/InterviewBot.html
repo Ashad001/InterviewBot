@@ -631,7 +631,6 @@
         </div>
     </div>
 
-    <!-- <script src="InterviewBot.js"></script> -->
     <script>
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new window.SpeechRecognition();
@@ -647,12 +646,10 @@
         let input = document.getElementById('input');
         let score = document.getElementById('score');
         let voice_arrow = document.getElementById('voiceArrow');
-        // let stBD = document.getElementById('staticBackdrop');
 
         text_area.style.display = 'none';
         input.className += ' blur';
         score.className += ' blur';
-        // stBD.className += 'blur';
         text.disabled = true;
 
         stoppeer.style.cursor = 'default';
@@ -738,12 +735,14 @@
 
         function check(event) {
             if (event.key == "Enter" && !event.shiftKey) {
+                var word = text.value;
                 event.preventDefault();
-                input.disabled = true;
+                text.disabled = true;
+                text.value = "";
                 setTimeout(function() {
-                  input.disabled = false;
+                  text.disabled = false;
                 }, 3500);
-                send();
+                send(word);
             }
         }
 
@@ -760,24 +759,17 @@
             }
         }
 
-        function send() {
+        function send(word=text.value) {
             console.log("Message Sent.");
-            // text.disabled = true;
-            // send_arrow.onclick = 'null';
-            // send_arrow.style.cursor = 'default';
-            // voice_arrow.style.opacity = 0.5;
-            // voice_arrow.removeEventListener("click", voice);
-            // voice_arrow.style.cursor = 'default';
-            // listening = false;
             voice_arrow.classList.remove('fa-beat');
-            if (text.value.length > 0) {
-                createEl('user', "");
+            if (word.length > 0) {
+                createEl('user', word);
                 active(text);
                 text_area.scrollTop = text_area.scrollHeight;
 
                 fetch("/receive-data", {
                     method: "POST",
-                    body: JSON.stringify(text.value),
+                    body: JSON.stringify(word),
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -817,7 +809,7 @@
 
                 var s1 = document.createElement('p');
                 s1.classList.add('fs-6');
-                s1.innerText = text.value;
+                s1.innerText = data;
                 div3.appendChild(s1);
 
                 div1.appendChild(div3);
@@ -880,15 +872,14 @@
             text_area.style.display = 'block';
             score.classList.remove('blur');
             input.classList.remove('blur');
-            // stBD.classList.remove('blur');
             rules.style.display = 'none';
             start.onclick = 'null';
             voice_arrow.style.opacity = 1;
             voice_arrow.style.cursor = 'pointer';
-            voice_arrow.addEventListener("onclick", voice);
+            voice_arrow.addEventListener("click", voice);
             stoppeer.style.cursor = 'pointer';
             stoppeer.style.opacity = 1;
-            stoppeer.addEventListener("onclick", stopper);
+            stoppeer.addEventListener("click", stopper);
 
             const userID = generateUserId();
             const prompt = "Please start the interview";
@@ -936,17 +927,6 @@
         function disableInput()
         {
             input.style.display = 'none';
-            // text.disabled = true;
-            // send_arrow.removeEventListener("click", send);
-            // send_arrow.style.cursor = 'default';
-            // voice_arrow.style.opacity = 0.5;
-            // voice_arrow.removeEventListener("click", voice);
-            // voice_arrow.style.cursor = 'default';
-            // listening = false;
-            // voice_arrow.classList.remove('fa-beat');
-            // stoppeer.removeEventListener("click", stopper);
-            // stoppeer.style.cursor = 'default';
-            // stoppeer.style.opacity = 0.5;
         }
 
         function stopper()
