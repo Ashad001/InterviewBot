@@ -3,18 +3,18 @@ import os
 from textblob import TextBlob
 import re
 from flask import Flask, request, jsonify, render_template
-from flask import session,redirect, url_for
-import secrets
+from flask import session
 from reportMailscript import send_mail
 from flask_cors import CORS
+import pandas as pd
+import gspread
 
 
 # from flask import Flask, request, render_template
 # from reportMailscript import send_mail
 
 try:
-    # openai.api_key = os.environ["OPENAI_API_KEY"]
-    openai.api_key = "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"
+    openai.api_key = os.environ["OPENAI_API_KEY"]
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
@@ -130,7 +130,7 @@ class Interview:
         # Stop_words checkings for the bot
         for pattern in self.patterns:
             match = re.search(pattern, reply, flags=re.IGNORECASE)
-            if match or self.questionsAsked > 19:
+            if match or self.questionsAsked > 4:
                 return 1
 
         self.questions.append(reply)
@@ -221,17 +221,13 @@ def get_interview_index(user_id):
     return None
 
 app =  Flask(__name__,template_folder="templates")
-cors = CORS(app, resources={r"/*": {"origins":"*"}})
+cors = CORS(app, resources={r"/*": {"origins": "*"}})
 app.secret_key = os.urandom(24)
+
 
 @app.route("/")
 def aut():
     return render_template("InterviewBot.html")
-
-kkkk = 0
-# @app.route("/ajeeb")
-# def abc():
-#     return str(kkkk)
 
 @app.route("/starter",methods=["POST","GET"])
 def runner():
@@ -264,6 +260,8 @@ def receive_data():
     scores = result[2] # Scores: [Tone, Understanding, Bot]
     flag = 0
     if result[1] == 0:
+    #     with app.test_request_context('/stopper_yay', method=["POST", "GET"]):
+    #         return app.stopper1()
         flag=1
         scores = scores
         report = interviews[interview_index].get_report_data()
