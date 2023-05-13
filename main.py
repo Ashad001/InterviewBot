@@ -7,11 +7,9 @@ from flask import session
 from reportMailscript import send_mail
 from flask_cors import CORS
 import pandas as pd
+from profanity_check import predict, predict_prob
 import gspread
 
-
-# from flask import Flask, request, render_template
-# from reportMailscript import send_mail
 
 try:
     openai.api_key = os.environ["OPENAI_API_KEY"]
@@ -56,6 +54,7 @@ class Interview:
     def __init__(self, name, user_id):
         self.name = name
         self.user_id = user_id
+        # user conversation
         self.messages = [
             {
             "role": "system",
@@ -86,6 +85,9 @@ class Interview:
         self.currentTone = 0.0;
         self.currentUnderstanding = 0.0;
         self.currentBot = 0.0
+        
+        self.profanity_flag_1 = False
+        self.profanity_flag_2 = False
 
 
         self.scoreCount_0 = 0
@@ -111,6 +113,23 @@ class Interview:
         if self.questionsAsked == 0 and not (message.startswith(("My name is", r"Hi(,?) I am", r"Hi(,?) My name is", r"Hello(,?) My name is", r"Hello(,?) I am"))):
            message = "My name is {} ".format(self.name) + message
 
+        if predict_prob([message]) > 0.9:
+            # profanity detected
+            reply = "You are using profanity, please refrain from using it!"
+            self.currentBot = 0.0
+            self.currentTone = 0.0
+            self.currentUnderstanding = 0.0
+            if self.profanity_flag_1:
+                self.scoreByTone = 0.0
+                self.scoreByAnswer = 0.0
+                self.scoreByBot = 0.0
+                self.questionsAsked += 1
+                reply = "You are using profanity again, your scores are reset to 0.0!"
+            else:
+                self.profanity_flag_1 = True
+            return reply
+            
+        
         # Bot Prompt
         self.messages.append({"role": "user", "content": message})
         try:
@@ -182,9 +201,6 @@ class Interview:
             try:
                 scores = []
                 response = self.process_message(message)
-                scores.append(round(safe_division(self.scoreByTone, self.scoreCount_1), 1))
-                scores.append(round(safe_division(self.scoreByAnswer, self.scoreCount_2), 1))
-                scores.append(round(safe_division(self.scoreByBot, self.scoreCount_0), 1))
                 if response == 0:
                     BotAnswer = "Interview stopped. Thank you for your time."
                     BotStatus = 0
@@ -210,6 +226,7 @@ class Interview:
             except Exception as e:
                 print(e)
                 print("Something went wrong. Please try again.")
+
 
 
 interviews = [None] * 100
