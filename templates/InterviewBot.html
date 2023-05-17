@@ -647,6 +647,10 @@
         let score = document.getElementById('score');
         let voice_arrow = document.getElementById('voiceArrow');
 
+        // retrieved data from the localStorage
+        var first = localStorage.getItem('first');
+        var emailVal = localStorage.getItem('em');
+
         text_area.style.display = 'none';
         input.className += ' blur';
         score.className += ' blur';
@@ -855,17 +859,6 @@
             }
             setTimeout(loop, delay);
         }
-        function generateUserId()
-        {
-            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-            let result = '';
-            for(let i=0;i<16;i++)
-            {
-                result += chars[Math.floor(Math.random() * chars.length)];
-            }
-            console.log(result)
-            return result;
-        }
 
         function startInt() {
             text.disabled = false;
@@ -881,13 +874,12 @@
             stoppeer.style.opacity = 1;
             stoppeer.addEventListener("click", stopper);
 
-            const userID = generateUserId();
             const prompt = "Please start the interview";
 
 
             fetch("/starter", {
                 method: "POST",
-                body: JSON.stringify({"user_id": userID, "prompt": prompt}),
+                body: JSON.stringify({"fname": first, "prompt": prompt}),
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -931,11 +923,12 @@
 
         function stopper()
         {
+            console.log(emailVal,first)
             disableInput();
             console.log("STOP INTERVIEW CALLED");
             fetch("/stopper_yay", {
                 method: "POST",
-                body: JSON.stringify("Stop the Interview"),
+                body: JSON.stringify({"email": emailVal, "prompt": "Stop the Interview"}),
                 headers: {
                     "Content-Type": "application/json"
                 },
@@ -944,6 +937,19 @@
                 .then(data => {
                     createEl('bot', data.ans);
                     adjust_Scores(data.score);
+
+                    var tone_score = data.score[0];
+                    var und_score = data.score[1];
+                    var AI_score = data.score[2];
+                    fetch("/scoreputter", {
+                    method: "POST",
+                    body: JSON.stringify({"tone": tone_score, "und": und_score, "AI": AI_score, "email": emailVal}),
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                    .then(response => response.json())
+                    .catch(error => console.error(error));
                     text_area.scrollTop = text_area.scrollHeight;
                 })
                 .catch(error => console.error(error));
