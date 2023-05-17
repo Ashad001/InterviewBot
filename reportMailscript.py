@@ -9,10 +9,10 @@ def send_mail(recievermail, scores, report):
     port = 465  # For SSL
     receiver_email = recievermail
     # read mail from file
-    with open("/home/DevHire23/mysite/readmail.txt") as f:
+    with open("readmail.txt") as f:
         sender_email = f.read()
     # password read from file
-    with open("/home/DevHire23/mysite/password.txt") as f:
+    with open("password.txt") as f:
         password = f.read()
     
     
@@ -145,3 +145,4 @@ def send_mail(recievermail, scores, report):
         print(f"Something went wrong while sending the email: {e}")
     finally:
         server.quit()
+        

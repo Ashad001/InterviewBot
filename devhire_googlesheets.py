@@ -1,28 +1,22 @@
 import gspread #for sheets
-import re #for string verification such as email and name formats
 import random
 from email.message import EmailMessage
 import smtplib #for sending verification emails through python
-import time
 import ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from flask import Flask, render_template, request, redirect, url_for, jsonify
+import os
+from flask import Flask, request, jsonify, render_template
+from flask import session
+from reportMailscript import send_mail
+from flask_cors import CORS
+import gspread
+from Interivew import *
 
 gc = gspread.service_account(filename='sheetAuth.json') #giving sheet access
+
 wks = gc.open("devhire_Database").sheet1
-
-# def validate_email(email):
-#     pattern = r'^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$'
-#     return re.match(pattern, email)
-
-# def validate_name(name):
-#     pattern = r'^[a-zA-Z]+$'
-#     return re.match(pattern, name)
-
-def gen_email_otp():
-    otp = str(random.randint(100000,999999))
-    return otp
 
 context = ssl.create_default_context() 
 def send_otp_email(first_name,email,verification_code):
@@ -76,6 +70,10 @@ def send_otp_email(first_name,email,verification_code):
         server.login(devhire_email,devhire_email_password)
         server.send_message(mail_content)
     
+def gen_email_otp():
+    otp = str(random.randint(100000,999999))
+    return otp    
+
 def genOTP(first_name,last_name,email):
     existing_emails = wks.col_values(3) #to check for a returning user and keeping new users unique
     if email in existing_emails:
@@ -86,7 +84,13 @@ def genOTP(first_name,last_name,email):
         send_otp_email(first_name,email,verification_code)
         return verification_code
         
-
+def putScore(tone,und,ai,email):
+    cell = wks.find(email)
+    row_num = cell.row
+    wks.cell(row_num,4).value = tone
+    wks.cell(row_num,5).value = und
+    wks.cell(row_num,6).value = ai  
+    return None
     
 def find_email(email):
     cell = wks.find(email)
@@ -109,57 +113,136 @@ def find_email(email):
 
 app = Flask(__name__,template_folder="templates")
 
+interviews = [None] * 100
+app.secret_key = os.urandom(24)
+
 @app.route("/")
-def aut():
+def defaultPage():
     return render_template("signup2.html")
 
-@app.route("/signup")
-def aut5():
+@app.route("/signup", methods=['GET'])
+def signupPage():
     return render_template("signup2.html")
 
-@app.route("/signin")
-def aut1():
+@app.route("/signin", methods=['GET'])
+def signinPage():
     return render_template("signin2.html")
 
-@app.route("/signinerror")
-def aut2():
+@app.route("/signinerror", methods=['GET'])
+def signinErrorPage():
  return render_template("signinerror.html")
 
-@app.route("/signuperror")
-def aut3():
+@app.route("/signuperror", methods=['GET'])
+def signupErrorPage():
  return render_template("signuperror.html")
 
 @app.route("/getOTP",methods=["POST","GET"])
-def receive_data():
+def getOTPfunc():
     data = request.get_json()
     data = dict(data)
     ver = genOTP(data['first'],data['last'],data['email'])
     return ver
 
 @app.route("/sendOTP",methods=["POST","GET"])
-def receive2_data():
+def sendOTPfunc():
     data = request.get_json()
     data = dict(data)
     ver = find_email(data['email'])
     return ver
 
 @app.route("/enterinsheet",methods=["POST","GET"])
-def receive_verified_data():
+def sheetEntryfunc():
     data = request.get_json()
     data = dict(data)
     first_name,last_name,email = data['first'],data['last'],data['email']
-    ver = jsonify({"first":first_name,"last":last_name,"email":email})
+    ver = jsonify({"first":first_name,"email":email})
     row = [first_name, last_name, email] #will insert in this order 
     wks.insert_row(row, index=2)
     return ver
 
-@app.route('/get_values')
-def get_values():
+@app.route('/get_values',methods=["POST","GET"])
+def getValsfunc():
     data = request.get_json()
-    data = dict(data)
-    values = ([data['first_name'],data['Tone'],data['Understanding'],data['Ai_Analysis']])
-    return jsonify(values)    
+    # write a function to retrieve already exiting data from the Gsheets using the email that is stored in the data variable.
+    values = jsonify({"tone":10,"und":9,"ai":0.8,"fname":"Tahir"})
+    return values   
 
+@app.route('/scoreputter',methods=["POST","GET"])
+def scorePutfunc():
+    data = request.get_json()
+    tone,und,ai,email = data['tone'],data['und'],data['AI'],data['email']
+    print("\n",tone,und,ai,email,"\n")
+    putScore(tone,und,ai,email)
+
+@app.route("/interview", methods=['GET'])
+def interviewer():
+    return render_template("InterviewBot.html")
+
+@app.route("/starter",methods=["POST","GET"])
+def runner():
+    global kkkk
+    fname = str(request.json["fname"])
+    interview_index = session.get('interview_index', None)
+    kkkk = interview_index
+    if interview_index is None:
+        for i in range(len(interviews)):
+            if interviews[i] is None:
+                interview_temp = Interview(fname)
+                interviews[i] = interview_temp
+                interview_index = int(i)
+                session['interview_index'] = interview_index # Store the interview index in the session
+                break
+
+    result = interviews[int(interview_index)].run(str(request.json["prompt"]))
+    response = jsonify({"result":str(result[0])})
+    response.headers.add('Access-Control-Allow-Origin', 'https://devday23.tech')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
+    response.headers.add('Access-Control-Allow-Methods', 'POST')
+    return response
+
+@app.route("/receive-data",methods=["POST","GET"])
+def receive_data():
+    interview_index = session.get('interview_index', None) # Get the interview index from the session
+    data = request.json
+    result = interviews[int(interview_index)].run(str(data))
+    scores = result[2] # Scores: [Tone, Understanding, Bot]
+    flag = 0
+    if result[1] == 0:
+    #     with app.test_request_context('/stopper_yay', method=["POST", "GET"]):
+    #         return app.stopper1()
+        flag=1
+        scores = scores
+        report = interviews[interview_index].get_report_data()
+        send_mail("ashad001sp@gmail.com", scores=scores, report=report)
+        response = jsonify({"ans":"The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again.","score":scores, "flag":flag})
+        interviews[interview_index] = None
+        session.pop('interview_index', None) # Remove the interview index from the session
+        return response
+    response = {"ans":result[0],"score":scores, "flag":flag}
+    return jsonify(response)
+
+@app.route('/end-session')
+def end_session():
+  interview_index = session.get('interview_index', None)
+  if interview_index is not None:
+    interviews[interview_index] = None
+    session.pop('interview_index', None)
+  return "Session ended due to inactivity please restart"
+
+@app.route('/stopper_yay', methods=["POST", "GET"])
+def stopper1():
+    data = str(request.json['prompt'])
+    email = str(request.json['email'])
+    interview_index = session.get('interview_index', None)
+    result = interviews[int(interview_index)].run(str(data))
+    scores = result[2]
+    flag = 1
+    report = interviews[int(interview_index)].get_report_data()
+    send_mail(email, scores=scores, report=report)
+    response = jsonify({"ans":"The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again.","score":scores, "flag":flag})
+    interviews[int(interview_index)] = None
+    session.pop('interview_index', None)
+    return response
 
 if __name__ == "__main__":
     app.run()
