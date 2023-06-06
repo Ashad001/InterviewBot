@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
-  <style>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
     @font-face {
     font-family: 'Product Sans';
     font-style: normal;
@@ -98,34 +98,42 @@
     }
 
   </style>
-  <title>Sign In</title>
-</head>
-<body>
-  <div id="container">
-    <div id="logo">
-      <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81q2OP_acUxP3syqtJRIJSjmNHE94df43MFmj4-kw8Lp1bMIFCM63XCbnpEFMX4kb38Du_ckZt6q_5-fNL_yp-CizKqz=s2560" alt="Dev Hire" style="width: 40%; height: auto;">
-    </div>
-    <div id="signin">
-      <h1>Sign In</h1>
-      <input type="email" id="signinEmail" placeholder="Email" />
-      <button id="signinSendOtp" onclick="verifyemail()">Send OTP</button>
-      <div id="signinTimer"></div>
-      <input type="text" id="signinOtp" placeholder="Enter OTP" />
-      <button id="signinButton" onclick="checkOTP()">Sign In</button>
-      <p>Don't have an account? <a href="#" onclick="window.location.href='/signup'">Sign up</a></p>
+    <title>Sign In</title>
+  </head>
+  <body>
+    <div id="container">
+      <div id="logo">
+        <img
+          src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81q2OP_acUxP3syqtJRIJSjmNHE94df43MFmj4-kw8Lp1bMIFCM63XCbnpEFMX4kb38Du_ckZt6q_5-fNL_yp-CizKqz=s2560"
+          alt="Dev Hire" style="width: 40%; height: auto;">
+      </div>
+      <div id="signin">
+        <h1>Sign In</h1>
+        <input type="email" id="signinEmail" placeholder="Email" />
+        <button id="signinSendOtp" onclick="verifyemail()">Send OTP</button>
+        <div id="signinTimer"></div>
+        <input type="text" id="signinOtp" placeholder="Enter OTP" />
+        <button id="signinButton" onclick="checkOTP()">Sign In</button>
+        <p>Don't have an account? <a href="#"
+            onclick="window.location.href='/signup'">Sign up</a></p>
+      </div>
+
+      <div id="welcome">
+        <h1 id="welcomeh1">Welcome Back User</h1>
+        <div class="score animate-animated animate-bounceInLeft" id="prev">Scores
+          from your last session:</div>
+        <div class="score animate-animated animate-bounceInLeft" id="toneScore">Tone
+          Score: 0</div>
+        <div class="score animate-animated animate-bounceInLeft animate-score"
+          id="understandingScore">Understanding Score: 0</div>
+        <div class="score animate-animated animate-bounceInLeft animate-score"
+          id="aiAnalysisScore">AI Analysis Score: 0</div>
+        <button id="startInterview" onclick="interviewStart()">Start the
+          Interview</button>
+      </div>
     </div>
 
-    <div id="welcome">
-      <h1 id="welcomeh1">Welcome Back User</h1>
-      <div class="score animate-animated animate-bounceInLeft" id="prev">Scores from your last session:</div>
-      <div class="score animate-animated animate-bounceInLeft" id="toneScore">Tone Score: 0</div>
-      <div class="score animate-animated animate-bounceInLeft animate-score" id="understandingScore">Understanding Score: 0</div>
-      <div class="score animate-animated animate-bounceInLeft animate-score" id="aiAnalysisScore">AI Analysis Score: 0</div>
-      <button id="startInterview" onclick="interviewStart()">Start the Interview</button>
-    </div>
-  </div>
-
-  <script>
+    <script>
     const signinSendOtp = document.getElementById("signinSendOtp");
     const signinTimer = document.getElementById("signinTimer");
     const signinButton = document.getElementById("signinButton");
@@ -217,7 +225,7 @@ function showWelcomeSection() {
 function getValues(){
         fetch("/get_values", {
                   method: "POST",
-                  body: JSON.stringify(email.value),
+                  body: JSON.stringify({"email": email.value}),
                   headers: {
                       "Content-Type": "application/json"
                   },
@@ -242,5 +250,5 @@ function getValues(){
     window.location.href = "/interview";
   }
   </script>
-</body>
+  </body>
 </html>

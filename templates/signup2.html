@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-                  
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+  <head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
 	@font-face {
   font-family: 'Product Sans';
   font-style: normal;
@@ -79,28 +79,31 @@
     }
 
   </style>
-  <title>Sign Up</title>
-</head>
-<body>
-  <div id="container">
-    <div id="logo">
-      <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81q2OP_acUxP3syqtJRIJSjmNHE94df43MFmj4-kw8Lp1bMIFCM63XCbnpEFMX4kb38Du_ckZt6q_5-fNL_yp-CizKqz=s2560" alt="Dev Hire" style="width: 40%; height: auto;">
-    </div>
-    
-    <div id="signup">
-      <h1>Sign Up</h1>
-      <input type="text" id="signupFirstName" placeholder="First Name" />
-      <input type="text" id="signupLastName" placeholder="Last Name" />
-      <input type="email" id="signupEmail" placeholder="Email" />
-      <button id="signupSendOtp" onclick="checkNIG()">Send OTP</button>
-      <div id="signupTimer"></div>
-      <input type="text" id="signupOtp" placeholder="Enter OTP" />
-      <button id="signupButton" onclick="checkOTP()">Sign Up</button>
-      <p>Already have an account? <a href="#" onclick="window.location.href='/signin'">Sign in</a></p>
+    <title>Sign Up</title>
+  </head>
+  <body>
+    <div id="container">
+      <div id="logo">
+        <img
+          src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81q2OP_acUxP3syqtJRIJSjmNHE94df43MFmj4-kw8Lp1bMIFCM63XCbnpEFMX4kb38Du_ckZt6q_5-fNL_yp-CizKqz=s2560"
+          alt="Dev Hire" style="width: 40%; height: auto;">
+      </div>
 
+      <div id="signup">
+        <h1>Sign Up</h1>
+        <input type="text" id="signupFirstName" placeholder="First Name" />
+        <input type="text" id="signupLastName" placeholder="Last Name" />
+        <input type="email" id="signupEmail" placeholder="Email" />
+        <button id="signupSendOtp" onclick="checkNIG()">Send OTP</button>
+        <div id="signupTimer"></div>
+        <input type="text" id="signupOtp" placeholder="Enter OTP" />
+        <button id="signupButton" onclick="checkOTP()">Sign Up</button>
+        <p>Already have an account? <a href="#"
+            onclick="window.location.href='/signin'">Sign in</a></p>
+
+      </div>
     </div>
-  </div>
-  <script>
+    <script>
     const signupSendOtp = document.getElementById("signupSendOtp");
     const signupTimer = document.getElementById("signupTimer");
     const signupButton = document.getElementById("signupButton");
@@ -230,5 +233,5 @@ function validateEmail() {
       }
     }
   </script>
-</body>
+  </body>
 </html>

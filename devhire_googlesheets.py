@@ -87,10 +87,16 @@ def genOTP(first_name,last_name,email):
 def putScore(tone,und,ai,email):
     cell = wks.find(email)
     row_num = cell.row
-    wks.cell(row_num,4).value = tone
-    wks.cell(row_num,5).value = und
-    wks.cell(row_num,6).value = ai  
-    return None
+    flag = ""
+    try:
+        wks.cell(row_num,4).value = tone
+        wks.cell(row_num,5).value = und
+        wks.cell(row_num,6).value = ai 
+        flag = "Found" 
+    except ValueError:
+        flag = "Not Found"
+    return flag
+        
     
 def find_email(email):
     cell = wks.find(email)
@@ -163,8 +169,15 @@ def sheetEntryfunc():
 @app.route('/get_values',methods=["POST","GET"])
 def getValsfunc():
     data = request.get_json()
+    cell = wks.find(data["email"])
+    row_num = cell.row
+    name = wks.cell(row_num,1).value 
+    tone = wks.cell(row_num,4).value
+    und = wks.cell(row_num,5).value 
+    ai = wks.cell(row_num,6).value   
+    
     # write a function to retrieve already exiting data from the Gsheets using the email that is stored in the data variable.
-    values = jsonify({"tone":10,"und":9,"ai":0.8,"fname":"Tahir"})
+    values = jsonify({"tone":tone,"und":und,"ai":ai,"fname":name})
     return values   
 
 @app.route('/scoreputter',methods=["POST","GET"])
@@ -173,6 +186,7 @@ def scorePutfunc():
     tone,und,ai,email = data['tone'],data['und'],data['AI'],data['email']
     print("\n",tone,und,ai,email,"\n")
     putScore(tone,und,ai,email)
+    return None
 
 @app.route("/interview", methods=['GET'])
 def interviewer():
@@ -205,6 +219,7 @@ def receive_data():
     interview_index = session.get('interview_index', None) # Get the interview index from the session
     data = request.json
     result = interviews[int(interview_index)].run(str(data))
+    print(result)
     scores = result[2] # Scores: [Tone, Understanding, Bot]
     flag = 0
     if result[1] == 0:
@@ -236,7 +251,7 @@ def stopper1():
     interview_index = session.get('interview_index', None)
     result = interviews[int(interview_index)].run(str(data))
     scores = result[2]
-    flag = 1
+    flag = 1   
     report = interviews[int(interview_index)].get_report_data()
     send_mail(email, scores=scores, report=report)
     response = jsonify({"ans":"The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again.","score":scores, "flag":flag})

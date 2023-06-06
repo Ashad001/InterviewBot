@@ -1,29 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- FontAwesome -->
+        <script src="https://kit.fontawesome.com/8d1aa5d30f.js"
+            crossorigin="anonymous"></script>
 
-    <!-- FontAwesome -->
-    <script src="https://kit.fontawesome.com/8d1aa5d30f.js" crossorigin="anonymous"></script>
+        <!-- Bootstrap -->
+        <link rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+            crossorigin="anonymous">
+        <script
+            src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+            integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+            crossorigin="anonymous"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+            integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+            crossorigin="anonymous"></script>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
-        integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
-        integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
-        crossorigin="anonymous"></script>
-
-    <!-- Local Files -->
-    <!-- <link rel="stylesheet" href="./InterviewBot.css"> -->
-    <title>DevDay - InterviewBot</title>
-    <style>
+        <!-- Local Files -->
+        <!-- <link rel="stylesheet" href="./InterviewBot.css"> -->
+        <title>DevDay - InterviewBot</title>
+        <style>
         .InterviewBot-Container {
             display: flex;
         }
@@ -458,180 +464,224 @@
             overflow: auto;
         }
     </style>
-</head>
+    </head>
 
-<body>
+    <body>
 
-    <div class="container-fluid InterviewBot-Container">
+        <div class="container-fluid InterviewBot-Container">
 
-        <div class="Score d-lg-flex d-none col-lg-3" id="score">
-            <div class="score-heading-container">
-                <h1 class="display-6 ">Score Board</h1>
-            </div>
-            <div class="score-bars-container">
-                <div class="score-group">
-                    <div class="score-name">Tone</div>
-                    <div class="score-number"><span class="score-number-obtained" id="tone"></span> / 10.0</div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" id="tone-bar"></div>
-                    </div>
+            <div class="Score d-lg-flex d-none col-lg-3" id="score">
+                <div class="score-heading-container">
+                    <h1 class="display-6 ">Score Board</h1>
                 </div>
-                <div class="score-group">
-                    <div class="score-name">Understanding</div>
-                    <div class="score-number"><span class="score-number-obtained" id="understanding"></span> / 10.0
-                    </div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" id="und-bar"></div>
-                    </div>
-                </div>
-                <div class="score-group">
-                    <div class="score-name">AI Score</div>
-                    <div class="score-number"><span class="score-number-obtained" id="AIscore"></span> / 10.0</div>
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-striped progress-bar-animated" id="ai-bar"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="score-prompt-container">
-                <div class="score-prompt">
-                    <p class="score-text">
-                        Accent/speech patterns may affect score.<br>
-                        Scoring system is based on specific criteria. Inadequate answers may get a lower score.<br>
-                        We encourage you to be clear and concise in your speech/answers to minimize
-                        misunderstandings.<br>
-                    </p>
-                    <span class="score-regards">All the best for the interview<br>
-                        <h6>Regards<br>~ DevHire</h6>
-                    </span>
-                </div>
-            </div>
-        </div>
-        <div id="Score-Board-btn-div">
-            <button class="btn Score-Board-btn" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#staticBackdrop" aria-controls="staticBackdrop">
-                <i class="bi bi-calendar2-range"></i>
-            </button>
-            <div class="offcanvas offcanvas-start" data-bs-backdrop="static" tabindex="-1" id="staticBackdrop"
-                aria-labelledby="staticBackdropLabel">
-                <div class="offcanvas-header">
-                    <div class="score-heading-container">
-                        <h1 class="display-6 ">Score Board</h1>
-                    </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="Score col-12" id="score">
-                    <div class="score-bars-container" style="margin: 0px;">
-                        <div class="score-group">
-                            <div class="score-name">Tone</div>
-                            <div class="score-number"><span class="score-number-obtained" id="tone2"></span> / 10.0
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="tone-bar2">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="score-group">
-                            <div class="score-name">Understanding</div>
-                            <div class="score-number"><span class="score-number-obtained" id="understanding2"></span>
-                                /
-                                10.0
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="und-bar2">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="score-group">
-                            <div class="score-name">AI Score</div>
-                            <div class="score-number"><span class="score-number-obtained" id="AIscore2"></span> / 10.0
-                            </div>
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" id="ai-bar2"></div>
-                            </div>
+                <div class="score-bars-container">
+                    <div class="score-group">
+                        <div class="score-name">Tone</div>
+                        <div class="score-number"><span
+                                class="score-number-obtained" id="tone"></span>
+                            / 10.0</div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped
+                                progress-bar-animated" id="tone-bar"></div>
                         </div>
                     </div>
-                    <div class="score-prompt-container">
-                        <div class="score-prompt">
-                            <p class="score-text">
-                                - Accent/speech patterns may affect score.<br>
-                                - Scoring system is based on specific criteria. Inadequate answers may get a lower
-                                score.<br>
-                                - We encourage you to be clear and concise in your speech/answers to minimize
-                                misunderstandings.<br>
-                            </p>
-                            <span class="score-regards">All the best for the interview<br>
-                                <h6>Regards<br>~ DevHire</h6>
-                            </span>
+                    <div class="score-group">
+                        <div class="score-name">Understanding</div>
+                        <div class="score-number"><span
+                                class="score-number-obtained"
+                                id="understanding"></span> / 10.0
+                        </div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped
+                                progress-bar-animated" id="und-bar"></div>
+                        </div>
+                    </div>
+                    <div class="score-group">
+                        <div class="score-name">AI Score</div>
+                        <div class="score-number"><span
+                                class="score-number-obtained" id="AIscore"></span>
+                            / 10.0</div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped
+                                progress-bar-animated" id="ai-bar"></div>
                         </div>
                     </div>
                 </div>
-
-            </div>
-        </div>
-        <div class="col-12 Primary-Section col-lg-9 container">
-            <div class="col-12 container" id="textArea">
-            </div>
-            <div class="col-12 container" style="height: 80vh; overflow: auto;" id="rulesarea">
-                <div class="row primary-info">
-                    <div class="col Capabilities container ">
-                        <i class="bi bi-hand-thumbs-up"></i>
-                        <h4>Capabilities</h4>
-                    </div>
-                    <div class="col Limits container ">
-                        <i class="bi bi-clipboard-x"></i>
-                        <h4>Limits</h4>
-                    </div>
-                </div>
-                <div class="container">
-                    <div class="row info-rules">
-                        <div class="col Capabilities-info ">
-                            <p>Asks interview-style questions to simulate a real interview environment</p>
-                        </div>
-                        <div class="col Limits-info ">
-                            <p>May not be able to fully replicate a face-to-face interview</p>
-                        </div>
-                    </div>
-                    <div class="row info-rules">
-                        <div class="col Capabilities-info">
-                            <p>Evaluates the candidate's tone, question understanding, and overall performance using
-                                sentiment analysis</p>
-                        </div>
-                        <div class="col Limits-info">
-                            <p>Relies on the accuracy of the sentiment analysis tool</p>
-                        </div>
-                    </div>
-                    <div class="row info-rules">
-                        <div class="col Capabilities-info">
-                            <p>Generates a detailed report for each candidate and sends it via email</p>
-                        </div>
-                        <div class="col Limits-info">
-                            <p>Scoring system can be inaccurate sometimes as it does not provide feedback on nonverbal
-                                communication or body language.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="row startbutton justify-content-md-center">
-                    <div class="col-md-auto">
-                        <button class="start" id="start" onclick="startInt()">Start Interview</button>
+                <div class="score-prompt-container">
+                    <div class="score-prompt">
+                        <p class="score-text">
+                            Accent/speech patterns may affect score.<br>
+                            Scoring system is based on specific criteria.
+                            Inadequate answers may get a lower score.<br>
+                            We encourage you to be clear and concise in your
+                            speech/answers to minimize
+                            misunderstandings.<br>
+                        </p>
+                        <span class="score-regards">All the best for the
+                            interview<br>
+                            <h6>Regards<br>~ DevHire</h6>
+                        </span>
                     </div>
                 </div>
             </div>
-            <div class="InputFieldDiv col-12 container" id="input">
-                <button class="stopButton01">
-                    <i class="bi bi-stop-circle-fill" id="stoppage" onclick="stopper()"></i>
-                    <div class="stopButton01Text">Click to stop the interview</div>
+            <div id="Score-Board-btn-div">
+                <button class="btn Score-Board-btn" type="button"
+                    data-bs-toggle="offcanvas"
+                    data-bs-target="#staticBackdrop"
+                    aria-controls="staticBackdrop">
+                    <i class="bi bi-calendar2-range"></i>
                 </button>
-                <input type="text" class="col-8 col-md-9" id="InputField" placeholder="Type here or use voice control"
-                    onkeypress="check(event)" onkeyup="active(this)">
-                <button class="voiceSend"><i class="fa-solid fa-microphone fa-beat" id="voiceArrow"
-                        onclick="voice()"></i></button>
-                <button class="textSend"><i class="fa-solid fa-paper-plane" onclick="send()"
-                        id="textArrow"></i></button>
+                <div class="offcanvas offcanvas-start" data-bs-backdrop="static"
+                    tabindex="-1" id="staticBackdrop"
+                    aria-labelledby="staticBackdropLabel">
+                    <div class="offcanvas-header">
+                        <div class="score-heading-container">
+                            <h1 class="display-6 ">Score Board</h1>
+                        </div>
+                        <button type="button" class="btn-close"
+                            data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="Score col-12" id="score">
+                        <div class="score-bars-container" style="margin: 0px;">
+                            <div class="score-group">
+                                <div class="score-name">Tone</div>
+                                <div class="score-number"><span
+                                        class="score-number-obtained"
+                                        id="tone2"></span> / 10.0
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar
+                                        progress-bar-striped
+                                        progress-bar-animated" id="tone-bar2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="score-group">
+                                <div class="score-name">Understanding</div>
+                                <div class="score-number"><span
+                                        class="score-number-obtained"
+                                        id="understanding2"></span>
+                                    /
+                                    10.0
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar
+                                        progress-bar-striped
+                                        progress-bar-animated" id="und-bar2">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="score-group">
+                                <div class="score-name">AI Score</div>
+                                <div class="score-number"><span
+                                        class="score-number-obtained"
+                                        id="AIscore2"></span> / 10.0
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar
+                                        progress-bar-striped
+                                        progress-bar-animated" id="ai-bar2"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="score-prompt-container">
+                            <div class="score-prompt">
+                                <p class="score-text">
+                                    - Accent/speech patterns may affect score.<br>
+                                    - Scoring system is based on specific
+                                    criteria. Inadequate answers may get a lower
+                                    score.<br>
+                                    - We encourage you to be clear and concise
+                                    in your speech/answers to minimize
+                                    misunderstandings.<br>
+                                </p>
+                                <span class="score-regards">All the best for the
+                                    interview<br>
+                                    <h6>Regards<br>~ DevHire</h6>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-12 Primary-Section col-lg-9 container">
+                <div class="col-12 container" id="textArea">
+                </div>
+                <div class="col-12 container" style="height: 80vh; overflow:
+                    auto;" id="rulesarea">
+                    <div class="row primary-info">
+                        <div class="col Capabilities container ">
+                            <i class="bi bi-hand-thumbs-up"></i>
+                            <h4>Capabilities</h4>
+                        </div>
+                        <div class="col Limits container ">
+                            <i class="bi bi-clipboard-x"></i>
+                            <h4>Limits</h4>
+                        </div>
+                    </div>
+                    <div class="container">
+                        <div class="row info-rules">
+                            <div class="col Capabilities-info ">
+                                <p>Asks interview-style questions to simulate a
+                                    real interview environment</p>
+                            </div>
+                            <div class="col Limits-info ">
+                                <p>May not be able to fully replicate a
+                                    face-to-face interview</p>
+                            </div>
+                        </div>
+                        <div class="row info-rules">
+                            <div class="col Capabilities-info">
+                                <p>Evaluates the candidate's tone, question
+                                    understanding, and overall performance using
+                                    sentiment analysis</p>
+                            </div>
+                            <div class="col Limits-info">
+                                <p>Relies on the accuracy of the sentiment
+                                    analysis tool</p>
+                            </div>
+                        </div>
+                        <div class="row info-rules">
+                            <div class="col Capabilities-info">
+                                <p>Generates a detailed report for each
+                                    candidate and sends it via email</p>
+                            </div>
+                            <div class="col Limits-info">
+                                <p>Scoring system can be inaccurate sometimes as
+                                    it does not provide feedback on nonverbal
+                                    communication or body language.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row startbutton justify-content-md-center">
+                        <div class="col-md-auto">
+                            <button class="start" id="start"
+                                onclick="startInt()">Start Interview</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="InputFieldDiv col-12 container" id="input">
+                    <button class="stopButton01">
+                        <i class="bi bi-stop-circle-fill" id="stoppage"
+                            onclick="stopper()"></i>
+                        <div class="stopButton01Text">Click to stop the
+                            interview</div>
+                    </button>
+                    <input type="text" class="col-8 col-md-9" id="InputField"
+                        placeholder="Type here or use voice control"
+                        onkeypress="check(event)" onkeyup="active(this)">
+                    <button class="voiceSend"><i class="fa-solid fa-microphone
+                            fa-beat" id="voiceArrow"
+                            onclick="voice()"></i></button>
+                    <button class="textSend"><i class="fa-solid fa-paper-plane"
+                            onclick="send()"
+                            id="textArrow"></i></button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <script>
+        <script>
         window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         const recognition = new window.SpeechRecognition();
         recognition.interimResults = false;
@@ -955,6 +1005,6 @@
                 .catch(error => console.error(error));
         }
     </script>
-</body>
+    </body>
 
 </html>

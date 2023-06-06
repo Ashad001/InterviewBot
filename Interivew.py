@@ -7,10 +7,12 @@ from flask import session
 from reportMailscript import send_mail
 from flask_cors import CORS
 from profanity_check import  predict_prob
+from scipy.integrate import solve_ivp
 
 
 try:
-    openai.api_key = os.environ["OPENAI_API_KEY"]
+    # openai.api_key = os.environ["OPENAI_API_KEY"]
+    openai.api_key = "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"
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
@@ -182,10 +184,10 @@ class Interview:
             self.scoreByTone += score1
             self.scoreByAnswer += score2
         self.questionsAsked += 1
-        # Tone Checkings
+        # Checking Tone
         if self.questionsAsked > 5 and self.scoreByTone < 2:
             return -1
-
+        print(reply)
         return reply
 
     def get_report_data(self):
@@ -222,4 +224,4 @@ class Interview:
                 return BotAnswer,BotStatus, scores
             except Exception as e:
                 print(e)
-                print("Something went wrong. Please try again.")
+                print("Something went wrong. Please try again. dfjndfsdjf")
