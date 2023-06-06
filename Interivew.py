@@ -11,8 +11,7 @@ from scipy.integrate import solve_ivp
 
 
 try:
-    # openai.api_key = os.environ["OPENAI_API_KEY"]
-    openai.api_key = "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"
+    openai.api_key = os.environ["OPENAI_API_KEY"]
 except:
     print("OpenAI API key not found. Please set the OPENAI_API_KEY environment variable.")
 
