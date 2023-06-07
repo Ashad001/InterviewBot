@@ -6,8 +6,8 @@ from flask import Flask, request, jsonify, render_template
 from flask import session
 from reportMailscript import send_mail
 from flask_cors import CORS
-from profanity_check import  predict_prob
-from scipy.integrate import solve_ivp
+# from profanity_check import predict,predict_prob
+# from scipy.integrate import solve_ivp
 
 
 try:
@@ -82,8 +82,8 @@ class Interview:
         self.currentTone = 0.0;
         self.currentUnderstanding = 0.0;
         self.currentBot = 0.0
-        
-        
+
+
         self.profanity_flag_1 = False
         self.profanity_flag_2 = False
 
@@ -112,22 +112,22 @@ class Interview:
            message = "My name is {} ".format(self.name) + message
 
 
-        
-        if predict_prob([message]) > 0.9:
-            # profanity detected
-            reply = "You are using profanity, please refrain from using it!"
-            self.currentBot = 0.0
-            self.currentTone = 0.0
-            self.currentUnderstanding = 0.0
-            if self.profanity_flag_1:
-                self.scoreByTone = 0.0
-                self.scoreByAnswer = 0.0
-                self.scoreByBot = 0.0
-                self.questionsAsked += 1
-                reply = "You are using profanity again, your scores are reset to 0.0!"
-            else:
-                self.profanity_flag_1 = True
-            return reply
+
+        # if predict_prob([message]) > 0.9:
+        #     # profanity detected
+        #     reply = "You are using profanity, please refrain from using it!"
+        #     self.currentBot = 0.0
+        #     self.currentTone = 0.0
+        #     self.currentUnderstanding = 0.0
+        #     if self.profanity_flag_1:
+        #         self.scoreByTone = 0.0
+        #         self.scoreByAnswer = 0.0
+        #         self.scoreByBot = 0.0
+        #         self.questionsAsked += 1
+        #         reply = "You are using profanity again, your scores are reset to 0.0!"
+        #     else:
+        #         self.profanity_flag_1 = True
+        #     return reply
         # Bot Prompt
         self.messages.append({"role": "user", "content": message})
         try:
@@ -190,9 +190,11 @@ class Interview:
         return reply
 
     def get_report_data(self):
-        format_style = 'Report:: Candidate Background: , Strengths: ,Areas To Improve: ,Recomendations: ,'
-        report = report_maker(self.questions, format_style, self.answers, model="gpt-3.5-turbo", max_tokens=250)
-        return report
+        if self.questionsAsked >= 8:
+            format_style = 'Report:: Candidate Background: , Strengths: ,Areas To Improve: ,Recomendations: ,'
+            report = report_maker(self.questions, format_style, self.answers, model="gpt-3.5-turbo", max_tokens=250)
+            return report
+        return -1
 
     def run(self,message):
         if message:

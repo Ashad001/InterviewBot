@@ -253,8 +253,11 @@ def stopper1():
     scores = result[2]
     flag = 1   
     report = interviews[int(interview_index)].get_report_data()
-    send_mail(email, scores=scores, report=report)
-    response = jsonify({"ans":"The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again.","score":scores, "flag":flag})
+    answer = "Please complete the interview to get detailed report and analysis of your interview\nThankyou!"
+    if report != -1:
+        send_mail(email, scores=scores, report=report)
+        answer = "The Interview has ended, please check your email for the detailed report of this session.\nThank you for speaking with us. To have another session please login again."
+    response = jsonify({"ans": answer,"score":scores, "flag":flag})
     interviews[int(interview_index)] = None
     session.pop('interview_index', None)
     return response
