@@ -142,7 +142,7 @@ class Interview:
         if any(re.match(pattern, message, re.IGNORECASE) for pattern in self.stop_patterns):
             return 0
 
-        if self.questionsAsked > 19:
+        if self.questionsAsked > 20:
             return 1
         # Stop_words checkings for the bot
         for pattern in self.patterns:
@@ -190,11 +190,9 @@ class Interview:
         return reply
 
     def get_report_data(self):
-        if self.questionsAsked >= 8:
-            format_style = 'Report:: Candidate Background: , Strengths: ,Areas To Improve: ,Recomendations: ,'
-            report = report_maker(self.questions, format_style, self.answers, model="gpt-3.5-turbo", max_tokens=250)
-            return report
-        return -1
+        format_style = 'Report:: Candidate Background: , Strengths: ,Areas To Improve: ,Recomendations: ,'
+        report = report_maker(self.questions, format_style, self.answers, model="gpt-3.5-turbo", max_tokens=250)
+        return report
 
     def run(self,message):
         if message:
