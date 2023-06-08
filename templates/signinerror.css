@@ -1,0 +1,51 @@
+@font-face {
+  font-family: 'Product Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Open Sans'), local('OpenSans'), url(https://fonts.gstatic.com/s/productsans/v5/HYvgU2fE2nRJvZ5JFAumwegdm0LZdjqr5-oayXSOefg.woff2) format('woff2');
+}
+body {
+  font-family: 'Product Sans', Arial, sans-serif;
+  background: linear-gradient(106deg, rgb(2 0 41 / 76%) 0%, rgba(76,187,182,0.6783088235294117) 40%, rgba(86,255,0,0.22172619047619047) 100%);
+  background-color: #3db77e4f;
+}
+#container {
+  max-width: 35%;
+  margin: 5% auto;
+  padding: 20px;
+  background-color: #fff;
+  border: 10px solid #39b1b2;
+  border-radius: 10px;
+}
+#logo {
+  text-align: center;
+  margin-top: -20px;
+  font-size: 24px;
+}
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  margin-top: -20px;
+  font-size: 300%;
+}
+button {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #39b1b2;
+  border: none;
+  border-radius: 3px;
+  font-size: 14px;
+  color: #fff;
+  cursor: pointer;
+}
+button:hover {
+  background-color: #2c9a9a;
+}
+a {
+  color: #39b1b2;
+}
+a:hover {
+  text-decoration: underline;
+}
