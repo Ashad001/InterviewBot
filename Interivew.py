@@ -50,8 +50,9 @@ def score_maker(question, answer, model = "gpt-3.5-turbo", max_tokens = 1):
     return response.choices[0].message['content']
 
 class Interview:
-    def __init__(self, name):
+    def __init__(self, name, email):
         self.name = name
+        self.email = email
         self.messages = [
             {
             "role": "system",
@@ -142,13 +143,8 @@ class Interview:
         if any(re.match(pattern, message, re.IGNORECASE) for pattern in self.stop_patterns):
             return 0
 
-        if self.questionsAsked > 20:
+        if self.questionsAsked > 19:
             return 1
-        # Stop_words checkings for the bot
-        for pattern in self.patterns:
-            match = re.search(pattern, reply, flags=re.IGNORECASE)
-            if match or self.questionsAsked > 4:
-                return 1
 
         self.questions.append(reply)
         if self.questionsAsked > 0:
@@ -222,5 +218,5 @@ class Interview:
                     scores.append(round(self.currentBot, 1))
                 return BotAnswer,BotStatus, scores
             except Exception as e:
-                print(e)
-                print("Something went wrong. Please try again. dfjndfsdjf")
+                # print(e)
+                # print("Something went wrong. Please try again. dfjndfsdjf")
