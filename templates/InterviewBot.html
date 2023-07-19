@@ -28,11 +28,442 @@
 
         <!-- Local Files -->
         <!-- <link rel="stylesheet" href="./InterviewBot.css"> -->
-        <link rel="stylesheet" href="InterviewBot.css">
         <title>DevDay - InterviewBot</title>
-    <!-- <style>
-    </style> -->
+        <style>
+        .InterviewBot-Container {
+            display: flex;
+        }
 
+        .score-bars-container {
+            margin-top: 20px;
+        }
+
+        .Score {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 30px;
+            font-weight: 200;
+            overflow: overlay;
+            height: 44rem;
+            border: 1px solid lightgrey;
+        }
+
+        .score-name {
+            color: #10a2a4;
+            font-size: larger;
+            font-weight: 300;
+        }
+
+        .score-number-obtained {
+            color: #10a2a4;
+            font-weight: 200;
+            font-size: 22px;
+        }
+
+        .score-prompt-container {
+            margin-top: 20px;
+        }
+
+        .score-prompt {
+            outline: 1px solid lightgray;
+            width: fit-content;
+            height: max-content;
+            min-height: 300px;
+            display: grid;
+            padding: 12px;
+            align-content: space-between;
+            border-radius: 4px;
+            font-weight: 300px;
+        }
+
+        .score-regards h6 {
+            text-align: right;
+        }
+
+        .progress {
+            height: 6px;
+        }
+
+        .progress-bar {
+            /* width: 50%; */
+            background-color: #10a2a4;
+        }
+
+        .score-bars-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+        }
+
+        .Primary-Section {
+            height: 100vh;
+            padding: 50px 10px;
+        }
+
+        .InterviewBotDiv {
+            min-height: 4rem;
+            display: flex;
+            margin: 15px 10px;
+            word-wrap: break-word;
+        }
+
+        .InterviewBotIcon {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #10a2a4;
+            color: #10a2a4;
+            border-radius: 50%;
+            background-color: white;
+            font-size: 33px;
+            margin: 8px 10px 8px 0px;
+            position: relative;
+        }
+
+        .InterviewBotIcon i {
+            margin: 0px 6px;
+        }
+
+        .InterviewBotProfile {
+            width: 60px;
+            height: 60px;
+            display: flex;
+        }
+
+        .InterviewBotChat {
+            padding: 15px 20px;
+            border-radius: 10px;
+            background-color: #10a2a4;
+            word-wrap: break-word;
+            color: white;
+        }
+
+        .IntervieweeDiv {
+            min-height: 4rem;
+            display: flex;
+            word-wrap: break-word;
+            padding: 0 30px 10px 0;
+        }
+
+        .IntervieweeIcon {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #10a2a4;
+            color: #10a2a4;
+            border-radius: 50%;
+            background-color: white;
+            font-size: 33px;
+            margin: 8px 0px 8px 10px;
+            position: relative;
+        }
+
+        .IntervieweeIcon i {
+            margin: 0px 6px;
+        }
+
+        .IntervieweeProfile {
+            width: 60px;
+            height: 60px;
+            display: flex;
+        }
+
+        .IntervieweeChat {
+            border: 3px solid #10a2a4;
+            padding: 15px 20px;
+            border-radius: 10px;
+            background-color: white;
+            color: #10a2a4;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px grey;
+            border-radius: 2px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #10a2a4;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #037377;
+        }
+
+        .Score::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .Score::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 5px white;
+            border-radius: 2px;
+        }
+
+        .Score::-webkit-scrollbar-thumb {
+            background: lightgray;
+            border-radius: 5px;
+        }
+
+        .Score::-webkit-scrollbar-thumb:hover {
+            background: white;
+        }
+
+        .InputFieldDiv {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 4rem;
+        }
+
+        #InputField {
+            height: 83%;
+            border-radius: 30px;
+            padding: 0px 17px;
+            border: 1px solid lightgray;
+            outline: none;
+        }
+
+        .stopButton01 {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+            border: 1px solid white;
+            font-size: 25px;
+            background-color: #10a2a4;
+            color: white;
+            margin: 0px 15px;
+            position: relative;
+        }
+
+        .stopButton01Text {
+            font-size: 14px;
+            border: 2px solid white;
+            border-radius: 6px;
+            padding: 6px 8px;
+            width: 9rem;
+            margin: -105px 0 0 -51px;
+            position: absolute;
+            background-color: #10a2a4;
+            color: white;
+            visibility: hidden;
+        }
+
+        .stopButton01:hover .stopButton01Text {
+            position: absolute;
+            visibility: visible;
+        }
+
+        .textSend {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+            padding: 6px 0px;
+            border: 1px solid white;
+            font-size: 25px;
+            background-color: #10a2a4;
+            color: white;
+            margin: 5px 2px 5px 5px;
+        }
+
+        .voiceSend {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            min-width: 50px;
+            min-height: 50px;
+            border: 1px solid white;
+            font-size: 25px;
+            background-color: #10a2a4;
+            color: white;
+            margin: 5px 2px 5px 5px;
+        }
+
+        .primary-info {
+            text-align: center;
+        }
+
+        .info-rules {
+            text-align: start;
+            padding: 7px;
+        }
+
+        .Examples-info {
+            border-radius: 10px;
+            border: 1px solid white;
+            font-size: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #10a2a4;
+            color: white;
+            /* padding: 0 5px 0 0; */
+        }
+
+        .Capabilities-info {
+            display: flex;
+            align-items: center;
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #10a2a4;
+            color: white;
+            padding: 15px 15px;
+            margin: 0px 10px;
+        }
+
+        .Limits-info {
+            border-radius: 6px;
+            font-size: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #10a2a4;
+            color: white;
+            padding: 15px 15px;
+            display: flex;
+            margin: 0px 10px;
+            align-items: center;
+        }
+
+        .Capabilities-info p {
+            margin: 0px !important;
+        }
+
+        .Limits-info p {
+            margin: 0px !important;
+        }
+
+        .info {
+            border-radius: 50%;
+            width: 40px;
+            height: 32px;
+            border: 1px solid white;
+            font-size: 20px;
+            background-color: #10a2a4;
+            color: white;
+            /* cursor: none; */
+        }
+
+        .col-md-auto {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .startbutton {
+            padding: 60px 0 0 0;
+        }
+
+        .start {
+            border-radius: 10px;
+            border: 1px solid #ffffff;
+            width: 200px;
+            height: 50px;
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 20px;
+            color: white;
+            background-color: #10a2a4;
+            cursor: pointer;
+        }
+
+        .input-cursor {
+            position: relative;
+            display: inline-block;
+            width: 2px;
+            height: 16px;
+            background-color: #10a2a4;
+            margin-left: 3px;
+            top: 4px;
+            animation: blink .6s linear infinite alternate;
+        }
+
+        @keyframes blink {
+            0% {
+                opacity: 1;
+            }
+
+            40% {
+                opacity: 1;
+            }
+
+            60% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .blur {
+            -webkit-filter: blur(2px);
+            -moz-filter: blur(2px);
+            -o-filter: blur(2px);
+            -ms-filter: blur(2px);
+        }
+
+        .score-group {
+            margin-bottom: 20px;
+        }
+
+        .Score-Board-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 60px;
+            border-radius: 20px;
+            height: 60px;
+            font-size: 26px;
+            --bs-btn-font-weight: 600;
+            --bs-btn-color: white;
+            --bs-btn-bg: #10a2a4;
+            --bs-btn-border-color: white;
+            --bs-btn-hover-color: #10a2a4;
+            --bs-btn-hover-bg: white;
+            --bs-btn-hover-border-color: #10a2a4;
+            border: 2px solid;
+            --bs-btn-focus-shadow-rgb: black;
+            --bs-btn-active-color: #10a2a4;
+            --bs-btn-active-bg: white;
+            --bs-btn-active-border-color: #10a2a4;
+        }
+
+        .offcanvas {
+            overflow: auto;
+        }
+
+        #Score-Board-btn-div {
+            z-index: 10000;
+            margin: 10px 0px 0px 10px;
+            position: absolute;
+            visibility: hidden;
+        }
+
+        @media (max-width: 991px) {
+            #Score-Board-btn-div {
+                visibility: visible;
+            }
+
+            .offcanvas {
+                visibility: visible;
+            }
+        }
+
+        @media (min-width: 992px) {
+            .offcanvas.show {
+                visibility: hidden;
+            }
+        }
+
+        #textArea {
+            height: 95%;
+            overflow: auto;
+        }
+    </style>
     </head>
 
     <body>
@@ -250,7 +681,330 @@
             </div>
         </div>
 
-<script src="InterviewBot.js"></script>
+        <script>
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new window.SpeechRecognition();
+        recognition.interimResults = false;
+        let listening = false;
+        let stoppeer = document.getElementById('stoppage');
+        let text = document.getElementById('InputField');
+        let send_arrow = document.getElementById('textArrow');
+        let text_area = document.getElementById('textArea');
+        let info = document.getElementById('infoicon');
+        let rules = document.getElementById('rulesarea');
+        let start = document.getElementById('start');
+        let input = document.getElementById('input');
+        let score = document.getElementById('score');
+        let voice_arrow = document.getElementById('voiceArrow');
+
+        // retrieved data from the localStorage
+        var first = localStorage.getItem('first');
+        var emailVal = localStorage.getItem('em');
+
+        text_area.style.display = 'none';
+        input.className += ' blur';
+        score.className += ' blur';
+        text.disabled = true;
+
+        stoppeer.style.cursor = 'default';
+        stoppeer.style.opacity = 0.5;
+        stoppeer.onclick = 'null';
+        send_arrow.style.opacity = 0.5;
+        send_arrow.onclick = 'null';
+        send_arrow.style.cursor = 'default';
+        voice_arrow.classList.remove('fa-beat');
+        voice_arrow.style.opacity = 0.5;
+        voice_arrow.onclick = 'null';
+        voice_arrow.style.cursor = 'default';
+
+        // var sessionTimeout = 30000;
+        // var sessionTimeoutId;
+        // function resetSessionTimeout() {
+        //   clearTimeout(sessionTimeoutId);
+        //   sessionTimeoutId = setTimeout(endSession, sessionTimeout);
+        // }
+
+        // document.addEventListener('mousemove', resetSessionTimeout);
+        // document.addEventListener('keypress', resetSessionTimeout);
+        // window.addEventListener('beforeunload', endSession);
+
+        // function endSession() {
+        //   fetch('/end-session')
+        //     .then(response => response.text())
+        //     .then(data => {
+        //         disableInput();
+        //         createEl('bot', data);
+        //         text_area.scrollTop = text_area.scrollHeight;
+        //     })
+        //     .catch(error => console.error(error));
+        // }
+
+
+
+        function voice() {
+            if (!listening) {
+                console.log("DevHire is listening.");
+                voice_arrow.classList.add('fa-beat');
+                recognition.start();
+                listening = true;
+            }
+            else {
+                console.log("DevHire is already listening.");
+            }
+        }
+
+        recognition.addEventListener("result", (e) => {
+            const voice_input = Array.from(e.results)
+                .map((result) => result[0])
+                .map((result) => result.transcript)
+                .join("");
+            if (e.results[0].isFinal) {
+                if (text.value != "") {
+                    text.value += " ";
+                    text.value += voice_input;
+                }
+                else {
+                    text.value += voice_input;
+                }
+                active(text);
+            }
+            else {
+                if (text.value != "") {
+                    text.value += " ";
+                    text.value += voice_input;
+                }
+                else {
+                    text.value += voice_input;
+                }
+                active(text);
+            }
+            voice_arrow.classList.remove('fa-beat');
+        });
+
+        recognition.addEventListener("end", () => {
+            console.log("DevHire stopped listening.");
+            listening = false;
+            voice_arrow.classList.remove('fa-beat');
+        });
+
+        function check(event) {
+            if (event.key == "Enter" && !event.shiftKey) {
+                var word = text.value;
+                event.preventDefault();
+                text.disabled = true;
+                text.value = "";
+                setTimeout(function() {
+                  text.disabled = false;
+                }, 3500);
+                send(word);
+            }
+        }
+
+        function active(msg) {
+            if (msg.value.trim() != "") {
+                send_arrow.style.opacity = 1;
+                send_arrow.style.cursor = 'pointer';
+                send_arrow.addEventListener("click", send);
+            }
+            else {
+                send_arrow.style.opacity = 0.5;
+                send_arrow.onclick = 'null';
+                send_arrow.style.cursor = 'default';
+            }
+        }
+
+        function send(word=text.value) {
+            console.log("Message Sent.");
+            voice_arrow.classList.remove('fa-beat');
+            if (word.length > 0) {
+                createEl('user', word);
+                active(text);
+                text_area.scrollTop = text_area.scrollHeight;
+
+                fetch("/receive-data", {
+                    method: "POST",
+                    body: JSON.stringify(word),
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        var Botdata = data.ans;
+                        var scoresList = data.score;
+                        var flag = data.flag;
+                        if(parseInt(flag)==1)
+                        {
+                            disableInput();
+                        }
+                        createEl('bot', Botdata);
+                        adjust_Scores(scoresList);
+                        text_area.scrollTop = text_area.scrollHeight;
+                    })
+                    .catch(error => console.error(error));
+            }
+            text.value = "";
+        }
+
+        function createEl(inp, data) {
+            if (inp === 'user') {
+                var div1 = document.createElement('div');
+                div1.classList.add('IntervieweeDiv', 'offset-2', 'col-10');
+
+                var div2 = document.createElement('div');
+                div2.className += 'IntervieweeIcon';
+
+                var i1 = document.createElement('i');
+                i1.classList.add('bi', 'bi-person');
+                div2.appendChild(i1);
+
+                var div3 = document.createElement('div');
+                div3.classList.add('IntervieweeChat', 'col-11');
+
+                var s1 = document.createElement('p');
+                s1.classList.add('fs-6');
+                s1.innerText = data;
+                div3.appendChild(s1);
+
+                div1.appendChild(div3);
+                div1.appendChild(div2);
+                text_area.appendChild(div1);
+                // iterateWithDelay(text.value,s1,20);
+            }
+            else if (inp === 'bot') {
+                var div1 = document.createElement('div');
+                div1.classList.add('InterviewBotDiv', 'col-10');
+
+                var div2 = document.createElement('div');
+                div2.className += 'InterviewBotIcon';
+
+                var i1 = document.createElement('i');
+                i1.classList.add('bi', 'bi-robot');
+                div2.appendChild(i1);
+
+                var div3 = document.createElement('div');
+                div3.classList.add('InterviewBotChat', 'col-11');
+
+                var p1 = document.createElement('p');
+                p1.className += 'fs-6';
+                p1.innerText = data;
+                div3.appendChild(p1);
+
+                div1.appendChild(div2);
+                div1.appendChild(div3);
+                text_area.appendChild(div1);
+                console.log(data);
+                // iterateWithDelay(data,p1,20);
+            }
+        }
+
+        function iterateWithDelay(array, ele, delay) {
+            let index = 0;
+            function loop() {
+                ele.innerText += array[index];
+                index++;
+                if (index < array.length) {
+                    setTimeout(loop, delay);
+                }
+            }
+            setTimeout(loop, delay);
+        }
+
+        function startInt() {
+            text.disabled = false;
+            text_area.style.display = 'block';
+            score.classList.remove('blur');
+            input.classList.remove('blur');
+            rules.style.display = 'none';
+            start.onclick = 'null';
+            voice_arrow.style.opacity = 1;
+            voice_arrow.style.cursor = 'pointer';
+            voice_arrow.addEventListener("click", voice);
+            stoppeer.style.cursor = 'pointer';
+            stoppeer.style.opacity = 1;
+            stoppeer.addEventListener("click", stopper);
+
+            const prompt = "Please start the interview";
+
+
+            fetch("/starter", {
+                method: "POST",
+                body: JSON.stringify({"fname": first, "prompt": prompt}),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    createEl('bot', data.result);
+                    text_area.scrollTop = text_area.scrollHeight;
+                })
+                .catch(error => console.error(error));
+        }
+
+        function adjust_Scores(scoresList) {
+            var tone_score = scoresList[0];
+            var und_score = scoresList[1];
+            var AI_score = scoresList[2];
+
+            document.getElementById('tone').innerHTML = tone_score;
+            document.getElementById('understanding').innerHTML = und_score;
+            document.getElementById('AIscore').innerHTML = AI_score;
+            document.getElementById('tone2').innerHTML = tone_score;
+            document.getElementById('understanding2').innerHTML = und_score;
+            document.getElementById('AIscore2').innerHTML = AI_score;
+
+            tone_score = tone_score * 10;
+            und_score = und_score * 10;
+            AI_score = AI_score * 10;
+
+            document.getElementById('tone-bar').style.width = tone_score + '%';
+            document.getElementById('und-bar').style.width = und_score + '%';
+            document.getElementById('ai-bar').style.width = AI_score + '%';
+            document.getElementById('tone-bar2').style.width = tone_score + '%';
+            document.getElementById('und-bar2').style.width = und_score + '%';
+            document.getElementById('ai-bar2').style.width = AI_score + '%';
+        }
+
+        function disableInput()
+        {
+            input.style.display = 'none';
+        }
+
+        function stopper()
+        {
+            console.log(emailVal,first)
+            disableInput();
+            console.log("STOP INTERVIEW CALLED");
+            fetch("/stopper_yay", {
+                method: "POST",
+                body: JSON.stringify({"email": emailVal, "prompt": "Stop the Interview"}),
+                headers: {
+                    "Content-Type": "application/json"
+                },
+            })
+                .then(response => response.json())
+                .then(data => {
+                    createEl('bot', data.ans);
+                    adjust_Scores(data.score);
+
+                    var tone_score = data.score[0];
+                    var und_score = data.score[1];
+                    var AI_score = data.score[2];
+                    fetch("/scoreputter", {
+                    method: "POST",
+                    body: JSON.stringify({"tone": tone_score, "und": und_score, "AI": AI_score, "email": emailVal}),
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                })
+                    .then(response => response.json())
+                    .catch(error => console.error(error));
+                    text_area.scrollTop = text_area.scrollHeight;
+                })
+                .catch(error => console.error(error));
+        }
+    </script>
     </body>
 
 </html>

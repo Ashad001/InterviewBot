@@ -9,28 +9,28 @@ def send_mail(recievermail, scores, report):
     port = 465  # For SSL
     receiver_email = recievermail
     # read mail from file
-    with open("/static/readmail.txt") as f:
+    with open("readmail.txt") as f:
         sender_email = f.read()
     # password read from file
-    with open("/static/password.txt") as f:
+    with open("password.txt") as f:
         password = f.read()
-
-
+    
+    
     smtp_server = "smtp.gmail.com"
     scores = scores
     report = report
     message = MIMEMultipart("alternative")
     message["Subject"] = "Score and Report"
-    message["From"] = sender_email
+    message["From"] = sender_email  
     message["To"] = receiver_email
-
-    formatreport = re.split(r'\r?\n|\r|\n|(\w+):', str(report))
-
+    
+    formatreport = re.split(r'\r?\n|\r|\n|(\w+):', report)
+    
     report = " "
     for line in formatreport:
         if line is not None:
             report = report + line + '<br>'
-
+    
     text = f"Hi,\n\nHere are your scores\n Score By Tone: {scores[0]} / 10.0\n Score by Question Understanding {scores[1]} / 10.0\n Score By Bot: {scores[2]} \ 10.0.\n\n{report}"
     # HTML content
     html = f"""
@@ -81,10 +81,10 @@ def send_mail(recievermail, scores, report):
     <div style="font-family: Helvetica,Arial,sans-serif;min-width:1000px;overflow:auto;line-height:2">
       <div style="margin:50px auto;width:80%;padding:20px 0">
         <div style="border-bottom:5px solid #eee">
-        <img src="/static/email_logo.png" alt="logo.png"  style="display:float; margin:auto;" height="150" width=auto>
+        <img src="https://lh3.googleusercontent.com/drive-viewer/AFGJ81rxuocJq92t5lIyKSE51q-xBEsMu3ah0tJxlnpw_VHkmzZ3NSo1yqWIrd0EI8W3QvSJIIRZgwWx_dEHjVuRkZ7rQYixxw=s2560" alt="logo.png"  style="display:float; margin:auto;" height="150" width=auto>
         </div>
         <div style="color:white; text-align:center; background: -webkit-linear-gradient(0deg,#39b1b2 ,#000000 100%);">
-
+          
           <p style="font-size:15px">
             <b>Dear Participant,</b>
           </p>
@@ -140,8 +140,9 @@ def send_mail(recievermail, scores, report):
         server = smtplib.SMTP_SSL(smtp_server, port, context=context)
         server.login(sender_email, password)
         server.sendmail(sender_email, receiver_email, message.as_string())
-        # print("Email sent successfully!")
+        print("Email sent successfully!")
     except Exception as e:
-        # print(f"Something went wrong while sending the email: {e}")
+        print(f"Something went wrong while sending the email: {e}")
     finally:
         server.quit()
+        
